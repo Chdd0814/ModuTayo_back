@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/publicApi")
@@ -121,9 +123,10 @@ public class apiController {
             return CompletableFuture.completedFuture(ResponseEntity.status(response.getStatusCode()).build());
         }
     }
+    // 2023 09 07 PM 08 43 데이터 분류 가공 수정
     @Async
     @GetMapping("/getBusList")
-    public ResponseEntity<List<Map<String, Object>>> getBusTerminalList() throws URISyntaxException {
+    public ResponseEntity<Map<String, List<Map<String, Object>>>> getBusTerminalList() throws URISyntaxException {
 
         String apiUrl = busTerminalUrl + "?serviceKey=" + publicAPIkey + "&numOfRows=240&pageNo=1&_type=json";
         URI uri = new URI(apiUrl);
@@ -154,19 +157,35 @@ public class apiController {
                     String terminalId = (String) itemMap.get("terminalId");
                     String regionKey = classifyRegionFromTerminalId(terminalId);
 
-                    // 터미널 정보를 해당 지역의 맵에 추가
-                    String terminalName = (String) itemMap.get("terminalNm");
-
-                    // 각 지역에 해당하는 터미널 정보를 하나의 맵에 저장
+                    // 각 지역에 해당하는 터미널 정보를 추가
                     Map<String, Object> regionTerminal = new HashMap<>();
-                    regionTerminal.put("regionKey", regionKey);
                     regionTerminal.put("terminalId", terminalId);
-                    regionTerminal.put("terminalName", terminalName);
+                    regionTerminal.put("terminalName", (String) itemMap.get("terminalNm"));
+                    regionTerminal.put("regionKey", regionKey);
 
                     regionList.add(regionTerminal);
                 }
-                System.out.println("버스터미널 정보 호출완료.");
-                return ResponseEntity.ok(regionList);
+
+                // 중복된 regionKey를 제거한 결과를 반환
+                List<Map<String, Object>> uniqueRegionList = regionList.stream()
+                        .collect(Collectors.toMap(
+                                region -> (String) region.get("regionKey"),
+                                Function.identity(),
+                                (existing, replacement) -> existing
+                        ))
+                        .values()
+                        .stream()
+                        .collect(Collectors.toList());
+
+                System.out.println("터미널 정보 출력완료.");
+                // 중복된 regionKey를 제거한 결과를 반환
+                Map<String, List<Map<String, Object>>> regionMap = new HashMap<>();
+                for (Map<String, Object> regionTerminal : regionList) {
+                    String regionKey = (String) regionTerminal.get("regionKey");
+                    regionMap.computeIfAbsent(regionKey, k -> new ArrayList<>()).add(regionTerminal);
+                }
+
+                return ResponseEntity.ok(regionMap);
             } catch (ParseException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -176,6 +195,7 @@ public class apiController {
             return ResponseEntity.status(response.getStatusCode()).build();
         }
     }
+
 
     // 터미널 ID에서 NAEK 뒤의 숫자를 추출하고 지역을 분류하는 메서드
     private String classifyRegionFromTerminalId(String terminalId) {
