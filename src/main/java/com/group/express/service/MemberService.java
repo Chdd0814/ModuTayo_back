@@ -20,7 +20,7 @@ public class MemberService {
         member.setId(memberDto.getId());
         member.setPass(memberDto.getPass());
         member.setName(memberDto.getName());
-        member.setPhoneNumber(memberDto.getPhonenumber());
+        member.setPhonenumber(memberDto.getPhonenumber());
         member.setMileage(memberDto.getMileage());
         member.setEmail(memberDto.getEmail());
         member.setAddress(memberDto.getAddress());
