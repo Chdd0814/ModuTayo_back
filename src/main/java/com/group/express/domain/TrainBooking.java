@@ -4,15 +4,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 @Entity
 public class TrainBooking {
-    public String getTicketNumber() {
-        return ticketNumber;
+
+    public TrainBooking() {
+
+    }
+    public String getId() {
+        return id;
     }
 
-    public void setTicketNumber(String ticketNumber) {
-        this.ticketNumber = ticketNumber;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getVehicleTypeName() {
@@ -23,19 +28,19 @@ public class TrainBooking {
         this.vehicleTypeName = vehicleTypeName;
     }
 
-    public LocalDateTime getDepartureTime() {
+    public Timestamp getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(LocalDateTime departureTime) {
+    public void setDepartureTime(Timestamp departureTime) {
         this.departureTime = departureTime;
     }
 
-    public LocalDateTime getArrivalTime() {
+    public Timestamp getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(LocalDateTime arrivalTime) {
+    public void setArrivalTime(Timestamp arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
@@ -87,6 +92,22 @@ public class TrainBooking {
         this.trainCarNumber = trainCarNumber;
     }
 
+    public String getTicketNumber() {
+        return ticketNumber;
+    }
+
+    public void setTicketNumber(String ticketNumber) {
+        this.ticketNumber = ticketNumber;
+    }
+
+    public String getCompartment() {
+        return compartment;
+    }
+
+    public void setCompartment(String compartment) {
+        this.compartment = compartment;
+    }
+
     public Member getMember() {
         return member;
     }
@@ -96,18 +117,10 @@ public class TrainBooking {
     }
 
     @Id
-    private String ticketNumber;
-    private String vehicleTypeName;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
-    private String departureStation;
-    private String arrivalStation;
-    private int fare;
-    private String trainNumber;
-    private String seatNumber;
+    private String id;
 
-    public TrainBooking(String ticketNumber, String vehicleTypeName, LocalDateTime departureTime, LocalDateTime arrivalTime, String departureStation, String arrivalStation, int fare, String trainNumber, String seatNumber, int trainCarNumber, Member member) {
-        this.ticketNumber = ticketNumber;
+    public TrainBooking(String id, String vehicleTypeName, Timestamp departureTime, Timestamp arrivalTime, String departureStation, String arrivalStation, int fare, String trainNumber, String seatNumber, int trainCarNumber, String ticketNumber, String compartment, Member member) {
+        this.id = id;
         this.vehicleTypeName = vehicleTypeName;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
@@ -117,13 +130,25 @@ public class TrainBooking {
         this.trainNumber = trainNumber;
         this.seatNumber = seatNumber;
         this.trainCarNumber = trainCarNumber;
+        this.ticketNumber = ticketNumber;
+        this.compartment = compartment;
         this.member = member;
     }
-public TrainBooking() {
 
-}
+    private String vehicleTypeName;
+    private Timestamp departureTime;
+    private Timestamp arrivalTime;
+    private String departureStation;
+    private String arrivalStation;
+    private int fare;
+    private String trainNumber;
+    private String seatNumber;
     private int trainCarNumber;
-    @ManyToOne
-    @JoinColumn(name = "id")
+    private String ticketNumber;
+    private String compartment;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Member member;
+
 }

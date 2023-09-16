@@ -16,13 +16,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/publicApi")
@@ -40,7 +36,7 @@ public class apiController {
     String baseUrl = "http://apis.data.go.kr/1613000/TrainInfoService/getCtyCodeList";
     String busTerminalUrl = "https://apis.data.go.kr/1613000/ExpBusInfoService/getExpBusTrminlList";
 
-//    String apiUrl = baseUrl + "?serviceKey=" + publicAPIkey + "&_type=json";
+    //    String apiUrl = baseUrl + "?serviceKey=" + publicAPIkey + "&_type=json";
     @Async
     @GetMapping("/getCityCodeList")
     public ResponseEntity<List<Map<String, Object>>> getCityCodeList() throws URISyntaxException {
@@ -123,10 +119,9 @@ public class apiController {
             return CompletableFuture.completedFuture(ResponseEntity.status(response.getStatusCode()).build());
         }
     }
-    // 2023 09 07 PM 08 43 데이터 분류 가공 수정
     @Async
     @GetMapping("/getBusList")
-    public ResponseEntity<Map<String, List<Map<String, Object>>>> getBusTerminalList() throws URISyntaxException {
+    public ResponseEntity<List<Map<String, Object>>> getBusTerminalList() throws URISyntaxException {
 
         String apiUrl = busTerminalUrl + "?serviceKey=" + publicAPIkey + "&numOfRows=240&pageNo=1&_type=json";
         URI uri = new URI(apiUrl);
@@ -156,36 +151,23 @@ public class apiController {
                     JSONObject itemMap = (JSONObject) item;
                     String terminalId = (String) itemMap.get("terminalId");
                     String regionKey = classifyRegionFromTerminalId(terminalId);
+                    // int areaCode = Integer.parseInt(classifyRegionFromTerminalId(terminalId)); //
 
-                    // 각 지역에 해당하는 터미널 정보를 추가
-                    Map<String, Object> regionTerminal = new HashMap<>();
-                    regionTerminal.put("terminalId", terminalId);
-                    regionTerminal.put("terminalName", (String) itemMap.get("terminalNm"));
+                    // 터미널 정보를 해당 지역의 맵에 추가
+                    String terminalName = (String) itemMap.get("terminalNm");
+
+                    // 각 지역에 해당하는 터미널 정보를 하나의 맵에 저장
+//                    Map<String, Object> regionTerminal = new HashMap<>();
+                    Map<String, Object> regionTerminal = new LinkedHashMap<>(); //
                     regionTerminal.put("regionKey", regionKey);
+                    regionTerminal.put("terminalId", terminalId);
+                    regionTerminal.put("terminalName", terminalName);
+                    //  regionTerminal.put("areaCode",areaCode); //
 
                     regionList.add(regionTerminal);
                 }
-
-                // 중복된 regionKey를 제거한 결과를 반환
-                List<Map<String, Object>> uniqueRegionList = regionList.stream()
-                        .collect(Collectors.toMap(
-                                region -> (String) region.get("regionKey"),
-                                Function.identity(),
-                                (existing, replacement) -> existing
-                        ))
-                        .values()
-                        .stream()
-                        .collect(Collectors.toList());
-
-                System.out.println("터미널 정보 출력완료.");
-                // 중복된 regionKey를 제거한 결과를 반환
-                Map<String, List<Map<String, Object>>> regionMap = new HashMap<>();
-                for (Map<String, Object> regionTerminal : regionList) {
-                    String regionKey = (String) regionTerminal.get("regionKey");
-                    regionMap.computeIfAbsent(regionKey, k -> new ArrayList<>()).add(regionTerminal);
-                }
-
-                return ResponseEntity.ok(regionMap);
+                System.out.println("버스터미널 정보 호출완료.");
+                return ResponseEntity.ok(regionList);
             } catch (ParseException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -195,7 +177,6 @@ public class apiController {
             return ResponseEntity.status(response.getStatusCode()).build();
         }
     }
-
 
     // 터미널 ID에서 NAEK 뒤의 숫자를 추출하고 지역을 분류하는 메서드
     private String classifyRegionFromTerminalId(String terminalId) {
@@ -230,5 +211,75 @@ public class apiController {
         } catch (NumberFormatException e) {
             return "오류"; // 숫자로 변환할 수 없는 경우 처리
         }
+    }
+
+
+    @Async
+    @GetMapping("/getTrainInfoList")
+    public ResponseEntity<List<Map<String, Object>>>  getTrainInfoList(@RequestParam String depPlaceId, @RequestParam String arrPlaceId, @RequestParam String depPlaceTime) throws URISyntaxException {
+
+        String apiUrl = publicAPIurl + "/1613000/TrainInfoService/getStrtpntAlocFndTrainInfo" +
+                "?serviceKey=" + publicAPIkey + "&pageNo=1" + "&numOfRows=100" + "&_type=json" +
+                "&depPlaceId=" + depPlaceId + "&arrPlaceId=" + arrPlaceId + "&depPlandTime=" + depPlaceTime;
+            URI uri = new URI(apiUrl);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/json");
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String jsonResponse = response.getBody();
+            JSONParser jsonParser = new JSONParser();
+            try {
+                JSONObject responseBody = (JSONObject) jsonParser.parse(jsonResponse);
+                JSONObject responseMap = (JSONObject) responseBody.get("response");
+                JSONObject responseBodyMap = (JSONObject) responseMap.get("body");
+                JSONObject itemsMap = (JSONObject) responseBodyMap.get("items");
+                JSONArray itemList = (JSONArray) itemsMap.get("item");
+
+                List<Map<String, Object>> itemListToReturn = new ArrayList<>();
+
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
+                for (Object item : itemList) {
+                    JSONObject itemMap = (JSONObject) item;
+                    Map<String, Object> TrainInfo = new HashMap<>();
+                    TrainInfo.put("Fare", itemMap.get("adultcharge")); // 운임
+                    TrainInfo.put("arrPlaceName", itemMap.get("arrplacename")); // 도착지이름
+                    try {
+                        Date arrPlandTime = inputFormat.parse(itemMap.get("arrplandtime").toString());
+                        String formattedArrPlandTime = outputFormat.format(arrPlandTime);
+                        TrainInfo.put("arrPlandTime", formattedArrPlandTime); // 도착시간
+                    } catch (java.text.ParseException e) {
+                        e.printStackTrace();
+                    }
+                    TrainInfo.put("depPlaceName", itemMap.get("depplacename")); // 출발지 이름
+                    try {
+                        Date depPlandTime = inputFormat.parse(itemMap.get("depplandtime").toString());
+                        String formattedDepPlandTime = outputFormat.format(depPlandTime);
+                        TrainInfo.put("depPlandTime", formattedDepPlandTime); // 출발시간
+                    } catch (java.text.ParseException e) {
+                        e.printStackTrace();
+//                        throw  new RuntimeException("실패");
+                    }
+                    TrainInfo.put("trainGradeName", itemMap.get("traingradename")); // 기차 종류
+                    TrainInfo.put("trainNum", itemMap.get("trainno")); // 기차 번호
+                    itemListToReturn.add(TrainInfo);
+                }
+                System.out.println("기차 정보 호출완료");
+                return ResponseEntity.ok(itemListToReturn);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            System.out.println("에러 코드: " + response.getStatusCodeValue());
+            return ResponseEntity.status(response.getStatusCode()).build();
+        }
+
+
+
+
     }
 }
