@@ -3,15 +3,18 @@ package com.group.express.domain;
 import javax.persistence.*;
 @Entity
 public class Payment {
+
     public Payment() {
 
     }
-    public Long getId() {
-        return id;
+
+
+    public String getBuyerid() {
+        return buyerid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBuyerid(String buyerid) {
+        this.buyerid = buyerid;
     }
 
     public String getTrainticketNumber() {
@@ -78,8 +81,37 @@ public class Payment {
         this.buyerTel = buyerTel;
     }
 
-    public Payment(Long id, String trainticketNumber, String busticketNumber, String impUid, String merchantUid, int paidAmount, String payMethod, String buyerName, String buyerTel, TrainBooking trainBooking, BusBooking busBooking) {
-        this.id = id;
+    public TrainBooking getTrainBooking() {
+        return trainBooking;
+    }
+
+    public void setTrainBooking(TrainBooking trainBooking) {
+        this.trainBooking = trainBooking;
+    }
+
+    public BusBooking getBusBooking() {
+        return busBooking;
+    }
+
+    public void setBusBooking(BusBooking busBooking) {
+        this.busBooking = busBooking;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    @Id
+    private String buyerid;
+
+    private String trainticketNumber;
+
+    public Payment(String buyerid, String trainticketNumber, String busticketNumber, String impUid, String merchantUid, int paidAmount, String payMethod, String buyerName, String buyerTel, TrainBooking trainBooking, BusBooking busBooking, Member member) {
+        this.buyerid = buyerid;
         this.trainticketNumber = trainticketNumber;
         this.busticketNumber = busticketNumber;
         this.impUid = impUid;
@@ -90,13 +122,9 @@ public class Payment {
         this.buyerTel = buyerTel;
         this.trainBooking = trainBooking;
         this.busBooking = busBooking;
+        this.member = member;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String trainticketNumber;
     private String busticketNumber;
     private String impUid;
     private String merchantUid;
@@ -105,11 +133,15 @@ public class Payment {
     private String buyerName;
     private String buyerTel;
 
-    @ManyToOne
-    @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", insertable = false, updatable = false)
+    @ManyToOne (cascade = CascadeType.ALL)
+    @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false, insertable = false, updatable = false)
     private TrainBooking trainBooking;
 
-    @ManyToOne
-    @JoinColumn(name = "busticketNumber", referencedColumnName = "ticketNumber", insertable = false, updatable = false)
+    @ManyToOne (cascade = CascadeType.ALL)
+    @JoinColumn(name = "busticketNumber", referencedColumnName = "ticketNumber", nullable = false, insertable = false, updatable = false)
     private BusBooking busBooking;
+
+    @ManyToOne (cascade = CascadeType.ALL)
+    @JoinColumn(name = "buyerid", referencedColumnName = "id", nullable = false, insertable = false, updatable = false )
+    private Member member;
 }

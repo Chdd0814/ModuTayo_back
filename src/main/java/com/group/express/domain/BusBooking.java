@@ -1,43 +1,23 @@
 package com.group.express.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 @Entity
 public class BusBooking {
+
     public BusBooking() {
 
     }
-    public BusBooking(String ticketNumber, int routeId, String busClass, LocalDateTime departureTime, LocalDateTime arrivalTime, String departureStation, String arrivalStation, String seatNumber, int fare, Member member) {
-        this.ticketNumber = ticketNumber;
-        this.routeId = routeId;
-        this.busClass = busClass;
-        this.departureTime = departureTime;
-        this.arrivalTime = arrivalTime;
-        this.departureStation = departureStation;
-        this.arrivalStation = arrivalStation;
-        this.seatNumber = seatNumber;
-        this.fare = fare;
-        this.member = member;
-    }
-
     @Id
-    private String ticketNumber;
-    private int routeId;
-    private String busClass;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
-    private String departureStation;
-    private String arrivalStation;
+    private String id;
 
-    public String getTicketNumber() {
-        return ticketNumber;
+    public String getId() {
+        return id;
     }
 
-    public void setTicketNumber(String ticketNumber) {
-        this.ticketNumber = ticketNumber;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getRouteId() {
@@ -56,20 +36,28 @@ public class BusBooking {
         this.busClass = busClass;
     }
 
-    public LocalDateTime getDepartureTime() {
+    public Timestamp getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(LocalDateTime departureTime) {
+    public void setDepartureTime(Timestamp departureTime) {
         this.departureTime = departureTime;
     }
 
-    public LocalDateTime getArrivalTime() {
+    public Timestamp getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(LocalDateTime arrivalTime) {
+    public void setArrivalTime(Timestamp arrivalTime) {
         this.arrivalTime = arrivalTime;
+    }
+
+    public String getTicketNumber() {
+        return ticketNumber;
+    }
+
+    public void setTicketNumber(String ticketNumber) {
+        this.ticketNumber = ticketNumber;
     }
 
     public String getDepartureStation() {
@@ -112,10 +100,32 @@ public class BusBooking {
         this.member = member;
     }
 
+    public BusBooking(String id, int routeId, String busClass, Timestamp departureTime, Timestamp arrivalTime, String ticketNumber, String departureStation, String arrivalStation, String seatNumber, int fare, Member member) {
+        this.id = id;
+        this.routeId = routeId;
+        this.busClass = busClass;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.ticketNumber = ticketNumber;
+        this.departureStation = departureStation;
+        this.arrivalStation = arrivalStation;
+        this.seatNumber = seatNumber;
+        this.fare = fare;
+        this.member = member;
+    }
+
+    private int routeId;
+    private String busClass;
+    private Timestamp departureTime;
+    private Timestamp arrivalTime;
+    private String ticketNumber;
+    private String departureStation;
+    private String arrivalStation;
     private String seatNumber;
     private int fare;
 
-    @ManyToOne
-    @JoinColumn(name = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Member member;
+
 }

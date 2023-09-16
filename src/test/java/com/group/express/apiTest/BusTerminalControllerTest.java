@@ -49,7 +49,7 @@ public class BusTerminalControllerTest {
     @Test
     public void testGetBusTerminalList() throws Exception {
         // GET 요청 수행
-        ResponseEntity<Map<String, List<Map<String, Object>>>> responseEntity = apiController.getBusTerminalList();
+        ResponseEntity<List<Map<String, Object>>> responseEntity = apiController.getBusTerminalList();
 
         // 응답 검증
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
