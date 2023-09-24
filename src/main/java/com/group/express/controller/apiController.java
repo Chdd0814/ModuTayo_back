@@ -34,7 +34,8 @@ public class apiController {
     private String publicAPIkey;
 
     String baseUrl = "http://apis.data.go.kr/1613000/TrainInfoService/getCtyCodeList";
-    String busTerminalUrl = "https://apis.data.go.kr/1613000/ExpBusInfoService/getExpBusTrminlList";
+    String busTerminalUrl = "https://apis.data.go.kr/1613000/ExpBusArrInfoService/getExpBusTmnList";
+
 
     //    String apiUrl = baseUrl + "?serviceKey=" + publicAPIkey + "&_type=json";
     @Async
@@ -131,7 +132,6 @@ public class apiController {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(uri, org.springframework.http.HttpMethod.GET, entity, String.class);
-
         if (response.getStatusCode() == HttpStatus.OK) {
             String jsonResponse = response.getBody();
             JSONParser jsonParser = new JSONParser();
@@ -149,12 +149,12 @@ public class apiController {
                 // 터미널 정보를 처리하고 지역별로 저장
                 for (Object item : itemList) {
                     JSONObject itemMap = (JSONObject) item;
-                    String terminalId = (String) itemMap.get("terminalId");
+                    String terminalId = String.valueOf(itemMap.get("tmnCd"));
                     String regionKey = classifyRegionFromTerminalId(terminalId);
-                    // int areaCode = Integer.parseInt(classifyRegionFromTerminalId(terminalId)); //
+//                    int areaCode = Integer.parseInt(classifyRegionFromTerminalId(terminalId)); //
 
                     // 터미널 정보를 해당 지역의 맵에 추가
-                    String terminalName = (String) itemMap.get("terminalNm");
+                    String terminalName = (String) itemMap.get("tmnNm");
 
                     // 각 지역에 해당하는 터미널 정보를 하나의 맵에 저장
 //                    Map<String, Object> regionTerminal = new HashMap<>();
@@ -162,7 +162,7 @@ public class apiController {
                     regionTerminal.put("regionKey", regionKey);
                     regionTerminal.put("terminalId", terminalId);
                     regionTerminal.put("terminalName", terminalName);
-                    //  regionTerminal.put("areaCode",areaCode); //
+//                    regionTerminal.put("areaCode",areaCode); //
 
                     regionList.add(regionTerminal);
                 }
@@ -178,12 +178,14 @@ public class apiController {
         }
     }
 
+
     // 터미널 ID에서 NAEK 뒤의 숫자를 추출하고 지역을 분류하는 메서드
     private String classifyRegionFromTerminalId(String terminalId) {
         try {
             // NAEK 뒤의 숫자를 추출
-            String numberPart = terminalId.replace("NAEK", "");
-            int number = Integer.parseInt(numberPart);
+//            String numberPart = terminalId.replace("NAEK", "");
+//            int number = Integer.parseInt(numberPart);
+            int number = Integer.parseInt(terminalId);
 
             // 지역을 분류
             if (number >= 0 && number <= 99) {
@@ -212,6 +214,7 @@ public class apiController {
             return "오류"; // 숫자로 변환할 수 없는 경우 처리
         }
     }
+
 
 
     @Async
@@ -282,4 +285,64 @@ public class apiController {
 
 
     }
+
+    @Async
+    @GetMapping("/getArrBusList")
+    public ResponseEntity<List<Map<String, Object>>> getArrBusTerminalList(String tmnCd) throws URISyntaxException {
+
+        String apiUrl = publicAPIurl + "/1613000/ExpBusArrInfoService/getArrTmnFromDepTmn?serviceKey=" + publicAPIkey + "&numOfRows=240&pageNo=1&_type=json&depTmnCd=" + tmnCd;
+        URI uri = new URI(apiUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(uri, org.springframework.http.HttpMethod.GET, entity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String jsonResponse = response.getBody();
+            JSONParser jsonParser = new JSONParser();
+            System.out.println(jsonResponse);
+            try {
+                JSONObject responseBody = (JSONObject) jsonParser.parse(jsonResponse);
+                JSONObject responseMap = (JSONObject) responseBody.get("response");
+                JSONObject responseBodyMap = (JSONObject) responseMap.get("body");
+                JSONObject itemsMap = (JSONObject) responseBodyMap.get("items");
+                JSONArray itemList = (JSONArray) itemsMap.get("item");
+
+                // 각 지역에 해당하는 터미널 정보를 저장할 리스트
+                List<Map<String, Object>> regionList = new ArrayList<>();
+
+                // 터미널 정보를 처리하고 지역별로 저장
+                for (Object item : itemList) {
+                    JSONObject itemMap = (JSONObject) item;
+                    String arrTerminalId = String.valueOf(itemMap.get("arrTmnCd"));
+                    String regionKey = classifyRegionFromTerminalId(arrTerminalId);
+//                    int areaCode = Integer.parseInt(classifyRegionFromTerminalId(terminalId)); //
+
+                    // 터미널 정보를 해당 지역의 맵에 추가
+                    String arrTerminalName = (String) itemMap.get("arrTmnNm");
+
+                    // 각 지역에 해당하는 터미널 정보를 하나의 맵에 저장
+//                    Map<String, Object> regionTerminal = new HashMap<>();
+                    Map<String, Object> regionTerminal = new LinkedHashMap<>(); //
+                    regionTerminal.put("regionKey", regionKey);
+                    regionTerminal.put("terminalId", arrTerminalId);
+                    regionTerminal.put("terminalName", arrTerminalName);
+//                    regionTerminal.put("areaCode",areaCode); //
+
+                    regionList.add(regionTerminal);
+                }
+                System.out.println("버스터미널 도착정보 호출완료.");
+                return ResponseEntity.ok(regionList);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            System.out.println("에러 코드: " + response.getStatusCodeValue());
+            return ResponseEntity.status(response.getStatusCode()).build();
+        }
+    }
+
 }
