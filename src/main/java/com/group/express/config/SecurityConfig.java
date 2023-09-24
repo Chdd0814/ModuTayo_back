@@ -47,12 +47,11 @@ public class SecurityConfig   {
         .addFilterBefore(new ExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable().cors().and()  // CSRF 보호를 비활성화
 
-//                .authorizeRequests(authorize -> {
-//                    authorize
-//                            anyReuqest().permitAll();
-////                            .antMatchers(HttpMethod.POST, "/login").permitAll()
-//////                            .anyRequest().authenticated().and();
-//                })
+                .authorizeRequests(authorize -> {
+                    authorize
+                            .antMatchers("/public/**").permitAll() // 리액트에서 사용하는 public 경로
+                            .anyRequest().authenticated();
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .apply(new JWTSecurityConfig(jwtTokenProvider));
 
