@@ -1,5 +1,7 @@
 package com.group.express.DTO;
 
+import com.group.express.domain.Authority;
+
 import javax.persistence.Id;
 
 public class MemberDTO {
@@ -65,11 +67,11 @@ public class MemberDTO {
         this.address = address;
     }
 
-    public String getRole() {
+    public Authority getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Authority role) {
         this.role = role;
     }
     @Id
@@ -84,9 +86,9 @@ public class MemberDTO {
 
     private String address;
 
-    private String role;
+    private Authority role;
 
-    public MemberDTO(String id, String pass, String name, String phonenumber, int mileage, String email, String address, String role) {
+    public MemberDTO(String id, String pass, String name, String phonenumber, int mileage, String email, String address, Authority role) {
         this.id = id;
         this.pass = pass;
         this.name = name;
