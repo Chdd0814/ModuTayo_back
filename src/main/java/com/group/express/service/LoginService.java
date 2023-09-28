@@ -28,6 +28,8 @@ public class LoginService {
         UsernamePasswordAuthenticationToken authenticationToken = loginRequest.toAuthentication();
         // authenticationToken 인증, 인증 성공 시 authentication 객체 반환(사용자 정보, 권한정보 포함)
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
+
+
         // 로그인 시 토큰 생성해서 반환
         return jwtTokenProvider.generateAccessTokenDto(authentication);
     }

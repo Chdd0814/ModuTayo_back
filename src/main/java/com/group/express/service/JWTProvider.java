@@ -2,6 +2,8 @@ package com.group.express.service;
 
 import com.group.express.DTO.TokenDTO;
 import com.group.express.config.JWT.expiredTime;
+import com.group.express.domain.Member;
+import com.group.express.repository.MemberRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -13,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -30,13 +33,18 @@ public class JWTProvider {
     private static final String BEARER_TYPE = "bearer";
     private final Key key;
     private final UserDetailsService userDetailsService;
+    private final MemberRepository memberRepository;
+
+
 
     // 생성자
-    public JWTProvider(@Value("${JWTsecretKey}") String secretKey, UserDetailsService userDetailsService) {
+    public JWTProvider(@Value("${JWTsecretKey}") String secretKey, UserDetailsService userDetailsService, MemberRepository memberRepository)  {
         this.userDetailsService = userDetailsService;  // userDetailsService 주입
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);  // secretKey를 디코딩해 바이트 배열로 변환
         this.key = Keys.hmacShaKeyFor(keyBytes);  // 위에서 디코딩한 바이트 배열의 secretKey를 기반으로 실제 사용하는 서명키 생성
+        this.memberRepository = memberRepository;
     }
+
 
     // Token 생성
     public TokenDTO generateAccessTokenDto(Authentication authentication) {  // 매개변수 : 로그인 유저의 정보
@@ -51,12 +59,18 @@ public class JWTProvider {
         // Token 만료 시간 설정 : 현재 시간 + security패키지의 ExpireTime에 지정한 ACCESS_TOKEN_EXPIRE_TIME 시간
         Date accessTokenExpiresIn = new Date(now + expiredTime.ACCESS_TOKEN_EXPIRE_TIME.getTime());
         log.info(String.valueOf(accessTokenExpiresIn));
-
+        // 인증된 사용자의 정보를 들고온다. 
+        Member member = memberRepository.findById(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + authentication.getName()));
         // Token 생성
         String accessToken = Jwts.builder()  // JWT 생성을 위한 빌더 객체 생성
                 .setSubject(authentication.getName())  // 사용자 아이디
                 .claim(AUTHORITIES_KEY,  // generateAccessTokenDto에서 찾은 authorities
                         authorities) // Custom Claim 지정, Claims는 JWT의 body이고 JWT 생성자가 JWT를 받는이들이게 제시하기 바라는 정보를 포함
+                // 추가 정보를 끼워넣는다.
+                .claim("name", member.getName()) // 이름
+                .claim("phonenumber", member.getPhonenumber()) // 휴대폰번호
+                .claim("mileage",member.getMileage()) // 마일리지
                 .setIssuedAt(new Date(System.currentTimeMillis()))  // 토큰 발생시간 : 현재 시간
                 .setExpiration(accessTokenExpiresIn) // 토큰 만료시간 : 47라인에서 설정한 만료시간
                 .signWith(key, SignatureAlgorithm.HS512) // sign key 지정, JWT 서명
@@ -77,7 +91,7 @@ public class JWTProvider {
         String accessToken = Jwts.builder()
                 .setSubject(email)
                 .claim(AUTHORITIES_KEY,
-                        "ROLE_USER") // Custom Claim 지정, Claims는 JWT의 body이고 JWT 생성자가 JWT를 받는이들이게 제시하기 바라는 정보를 포함
+                        "user") // Custom Claim 지정, Claims는 JWT의 body이고 JWT 생성자가 JWT를 받는이들이게 제시하기 바라는 정보를 포함
                 .setIssuedAt(new Date(System.currentTimeMillis()))  // 토큰 발생시간 : 현재 시간
                 .setExpiration(accessTokenExpiresIn) // 만료시간
                 .signWith(key, SignatureAlgorithm.HS512) // sign key 지정
