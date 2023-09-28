@@ -116,8 +116,6 @@ public class TrainBooking {
         this.member = member;
     }
 
-    @Id
-    private String id;
 
     public TrainBooking(String id, String vehicleTypeName, Timestamp departureTime, Timestamp arrivalTime, String departureStation, String arrivalStation, int fare, String trainNumber, String seatNumber, int trainCarNumber, String ticketNumber, String compartment, Member member) {
         this.id = id;
@@ -135,6 +133,8 @@ public class TrainBooking {
         this.member = member;
     }
 
+    @Id
+    private String id;
     private String vehicleTypeName;
     private Timestamp departureTime;
     private Timestamp arrivalTime;
