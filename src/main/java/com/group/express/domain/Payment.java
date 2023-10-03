@@ -32,7 +32,8 @@ public class Payment {
     private String buyerName;
     private String buyerTel;
     private String buyerid;
-    private Date reservationDate;
+    @Column(name = "paymentDate")
+    private String paymentDate;
 
     @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false, insertable = false, updatable = false)
