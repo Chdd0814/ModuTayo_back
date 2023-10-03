@@ -26,14 +26,14 @@ public class Notice {
     private LocalDate postdate;
     @Column(name = "fileName")
     private String fileName;
-    @Column(name = "filePath")
-    private String filePath;
     @Column(name = "fileSize")
     private int fileSize;
+    @Lob
+    private byte[] file;
+
 
 
 
 
 
 }
-

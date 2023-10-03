@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,13 @@ public class MemberService {
 
         memberRepository.save(member);
     }
+
+
+    public List<Member> getMemberList() {return memberRepository.findAll(); }
+
+    public List<Member> getMemberListByName(String name) {return memberRepository.findByNameContaining(name);}
+
+    public List<Member> getMemberListById(String id) {return memberRepository.findByIdContaining(id);}
 
     public Member getMemberById(String id){
         return memberRepository.findById(id).orElse(null);

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 @Entity
@@ -33,6 +34,7 @@ public class TrainBooking {
     private String compartment;
     private String id;
     private String name;
+    private Date reservationDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)

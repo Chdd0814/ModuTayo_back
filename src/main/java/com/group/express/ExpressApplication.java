@@ -15,7 +15,6 @@ public class ExpressApplication {
 
     @Bean
     public RestTemplate restTemplate() {
-
         return new RestTemplate();
     }
 }
