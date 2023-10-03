@@ -21,8 +21,8 @@ import java.time.LocalDateTime;
 public class TrainBooking {
 
     private String vehicleTypeName;
-    private Timestamp departureTime;
-    private Timestamp arrivalTime;
+    private String departureTime;
+    private String arrivalTime;
     private String departureStation;
     private String arrivalStation;
     private int fare;
@@ -34,7 +34,7 @@ public class TrainBooking {
     private String compartment;
     private String id;
     private String name;
-    private Date reservationDate;
+    private String reservationDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
