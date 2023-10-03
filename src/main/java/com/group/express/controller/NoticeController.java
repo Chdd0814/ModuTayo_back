@@ -52,6 +52,7 @@ public class NoticeController {
                                                 @RequestParam("postdate") String postdate,
                                                 @RequestParam(value="myfile",required = false) MultipartFile file) throws IOException, SQLException {
         Notice notice=new Notice();
+
         notice.setTitle(title);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(postdate, formatter);
@@ -68,7 +69,6 @@ public class NoticeController {
     }
 
     @PutMapping("/{num}")
-
     public ResponseEntity<Notice> updateNotice(@PathVariable Long num,
                                                @RequestParam("title") String title,
                                                @RequestParam("content") String content,

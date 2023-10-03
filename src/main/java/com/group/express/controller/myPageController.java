@@ -17,11 +17,13 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class myPageController {
     private final MemberService memberService;
+
     private final BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private myPageController(MemberService memberService, PasswordEncoder passwordEncoder)
     {this.memberService=memberService;
         this.passwordEncoder = (BCryptPasswordEncoder) passwordEncoder;}
+
 
     @GetMapping("/EditMember/{id}")
     public ResponseEntity<Member> getMember(@PathVariable String id){
