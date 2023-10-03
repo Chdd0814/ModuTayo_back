@@ -35,7 +35,7 @@ public class BusTerminalControllerTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this); // Mock 초기화
+        MockitoAnnotations.initMocks(this); // Mock 초기화 테스트코드 삭제하던가 나중에 수정해야함.
 
         fakeRegionMap = new HashMap<>();
         fakeRegionMap.put("0", createRegionMap("서울", new ArrayList<>()));

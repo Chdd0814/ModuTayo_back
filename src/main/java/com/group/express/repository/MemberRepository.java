@@ -17,4 +17,12 @@ public interface MemberRepository extends JpaRepository<Member, String>{
     List<Member> findByNameContaining(String partialName);
     List<Member> findByIdContaining(String id);
 
+
+
+
+
+
+
+
+
 }

@@ -35,6 +35,7 @@ public class TrainBooking {
     private String id;
     private String name;
     private Date reservationDate;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Member member;
