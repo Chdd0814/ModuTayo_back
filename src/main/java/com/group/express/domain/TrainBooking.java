@@ -31,7 +31,6 @@ public class TrainBooking {
     private int trainCarNumber;
     @Id
     private String ticketNumber;
-    private String compartment;
     private String id;
     private String name;
     private String reservationDate;

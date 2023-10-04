@@ -1,7 +1,5 @@
 package com.group.express.service;
 
-import com.group.express.domain.BusBooking;
-import com.group.express.domain.Payment;
 import com.group.express.domain.TrainBooking;
 import com.group.express.repository.TrainBookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,4 +26,5 @@ public class TrainBookingService {
             e.printStackTrace();
         }
     }
+
 }
