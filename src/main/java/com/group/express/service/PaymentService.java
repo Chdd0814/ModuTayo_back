@@ -18,6 +18,13 @@ public class PaymentService {
     public List<Payment> getPaymentList(String id ){
         return paymentRepository.findPaymentsById(id);
     }
-
+    public void PaymentSuccess(Payment payment) {
+        // 결제 정보를 데이터베이스에 저장
+        try {
+            paymentRepository.save(payment);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
