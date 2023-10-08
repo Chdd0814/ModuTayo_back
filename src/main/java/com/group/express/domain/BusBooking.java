@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 @Entity
@@ -30,9 +31,10 @@ public class BusBooking {
     private int fare;
     private String id;
     private String name;
-
+    private Date reservationDate;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Member member;
 
 }
+
