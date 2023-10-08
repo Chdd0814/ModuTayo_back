@@ -7,9 +7,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import javax.sql.rowset.serial.SerialBlob;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -44,48 +49,51 @@ public class NoticeController {
     @PostMapping()
     public ResponseEntity<Notice> createNotice ( @RequestParam("title") String title,
                                                  @RequestParam("content") String content,
-                                                 @RequestParam("postdate") String postdate,
-                                                 @RequestParam("myfile") MultipartFile file,
-                                                 @RequestBody Notice notice) throws IOException {
+                                                @RequestParam("postdate") String postdate,
+                                                @RequestParam(value="myfile",required = false) MultipartFile file) throws IOException, SQLException {
+        Notice notice=new Notice();
 
         notice.setTitle(title);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(postdate, formatter);
         notice.setPostdate(localDate);
         notice.setContent(content);
-        String projectPath=System.getProperty("user.dir")+"\\src\\main\\resources\\static\\static\\media";
-        UUID uuid=UUID.randomUUID();
-        String fileName=uuid+"_"+file.getOriginalFilename();
-
-        File savefile=new File(projectPath,fileName);
-
-        file.transferTo(savefile);
-
+        if(file != null && !file.isEmpty()){
         notice.setFileSize((int)file.getSize());
-        notice.setFilePath("/static/media/"+fileName);
-        notice.setFileName(fileName);
-
-
+        notice.setFileName(file.getOriginalFilename());
+        byte[] fileBytes = file.getBytes();
+        notice.setFile(fileBytes);
+        }
         Notice createdNotice = noticeService.createNotice(notice);
         return ResponseEntity.ok(createdNotice);
     }
 
     @PutMapping("/{num}")
-    public ResponseEntity<Notice> updateNotice(@PathVariable Long num, @RequestParam("title") String title,
+    public ResponseEntity<Notice> updateNotice(@PathVariable Long num,
+                                               @RequestParam("title") String title,
                                                @RequestParam("content") String content,
                                                @RequestParam("postdate") String postdate,
-                                               @RequestParam("myfile") MultipartFile file,
-                                               @RequestParam("visitcount") int count,
-                                               @RequestBody Notice notice) throws IOException {
-
-
+                                               @RequestParam(value="myfile",required = false) MultipartFile file,
+                                               @RequestParam("visitcount") String count) throws IOException {
+        Notice notice=noticeService.getNoticeById(num);
         notice.setTitle(title);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(postdate, formatter);
         notice.setPostdate(localDate);
         notice.setContent(content);
-        notice.setVisitcount(count);
+        notice.setVisitcount(Integer.parseInt(count));
         notice.setNum(num); // 업데이트할 공지사항의 번호를 설정
+        if(file != null && !file.isEmpty()){
+            notice.setFileSize((int)file.getSize());
+            notice.setFileName(file.getOriginalFilename());
+            byte[] fileBytes = file.getBytes();
+            notice.setFile(fileBytes);
+        }
+        else{
+            notice.setFileName(null);
+            notice.setFileSize(0);
+            notice.setFile(null);
+        }
         Notice updatedNotice = noticeService.updateNotice(notice);
         if (updatedNotice == null) {
             return ResponseEntity.notFound().build();
@@ -94,7 +102,8 @@ public class NoticeController {
     }
 
     @DeleteMapping("/{num}")
-    public ResponseEntity<?> deleteNotice(@PathVariable Long num) {
+    public ResponseEntity<?> deleteNotice(@PathVariable Long num) throws IOException {
+        Notice notice=noticeService.getNoticeById(num);
         noticeService.deleteNotice(num);
         return ResponseEntity.ok().build();
     }

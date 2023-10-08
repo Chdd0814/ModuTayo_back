@@ -4,8 +4,11 @@ import com.group.express.domain.Notice;
 import com.group.express.repository.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class NoticeService {
@@ -27,7 +30,7 @@ public class NoticeService {
     }
 
     // 공지사항 등록
-    public Notice createNotice(Notice notice) {
+    public Notice createNotice(Notice notice){
         return noticeRepository.save(notice);
     }
 

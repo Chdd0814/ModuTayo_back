@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Date;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,6 +32,7 @@ public class Payment {
     private String buyerName;
     private String buyerTel;
     private String buyerid;
+    private Date reservationDate;
 
     @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false, insertable = false, updatable = false)
