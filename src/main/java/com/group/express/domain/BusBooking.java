@@ -21,8 +21,8 @@ public class BusBooking {
 
     private int routeId;
     private String busClass;
-    private Timestamp departureTime;
-    private Timestamp arrivalTime;
+    private String departureTime;
+    private String arrivalTime;
     @Id
     private String ticketNumber;
     private String departureStation;
@@ -31,7 +31,7 @@ public class BusBooking {
     private int fare;
     private String id;
     private String name;
-    private Date reservationDate;
+    private String reservationDate;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Member member;
