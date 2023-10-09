@@ -16,10 +16,6 @@ import java.sql.Date;
 @Table(name = "payment")
 public class Payment {
 
-
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentid;
@@ -32,7 +28,8 @@ public class Payment {
     private String buyerName;
     private String buyerTel;
     private String buyerid;
-    private Date paymentDate;
+    @Column(name = "paymentDate")
+    private String paymentDate;
 
     @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false, insertable = false, updatable = false)
