@@ -16,10 +16,6 @@ import java.sql.Date;
 @Table(name = "payment")
 public class Payment {
 
-
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentid;

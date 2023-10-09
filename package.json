@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "jwt-decode": "^3.1.2"
+    "jwt-decode": "^3.1.2",
+    "daterangepicker": "^3.1.0"
   }
 }
