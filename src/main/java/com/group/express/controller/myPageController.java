@@ -1,5 +1,6 @@
 package com.group.express.controller;
 
+import com.group.express.domain.Authority;
 import com.group.express.domain.Member;
 import com.group.express.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,29 @@ public class myPageController {
         }
 
         return ResponseEntity.ok(memberList);
+    }
+
+    @GetMapping("/AdminMember_dialog/{id}")
+    public ResponseEntity<Authority> getAdminMember(@PathVariable String id){
+        Member member=memberService.getMemberById(id);
+        return ResponseEntity.ok(member.getRole());
+    }
+
+    @DeleteMapping("/AdminMember/delete/{id}")
+    public ResponseEntity<?> deleteMember(@PathVariable String id){
+        memberService.deleteMember(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/AdminMember/update/{id}")
+    public ResponseEntity<?> updateMember(@PathVariable String id){
+        Member member=memberService.getMemberById(id);
+        if(member.getRole().equals(Authority.admin)){
+            member.setRole(Authority.user);
+        }else{
+            member.setRole(Authority.admin);
+        }
+        memberService.updateMember(member);
+        return ResponseEntity.ok().build();
     }
 }
