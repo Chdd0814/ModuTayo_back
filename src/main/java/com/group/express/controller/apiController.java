@@ -345,4 +345,66 @@ public class apiController {
         }
     }
 
+    @Async
+    @GetMapping("/BusInfo")
+    public ResponseEntity<List<Map<String, Object>>> BusInfo(@RequestParam String depId,@RequestParam String arrId,@RequestParam String depTime) throws URISyntaxException {
+        String apiUrl = publicAPIurl + "/1613000/ExpBusInfoService/getStrtpntAlocFndExpbusInfo?serviceKey=" + publicAPIkey + "&pageNo=1&numOfRows=240&_type=json&depTerminalId=" + depId + "&arrTerminalId=" + arrId + "&depPlandTime=" + depTime;
+        URI uri = new URI(apiUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String jsonResponse = response.getBody();
+            System.out.println("jsonResponse : " + jsonResponse);
+            JSONParser jsonParser = new JSONParser();
+            try {
+                JSONObject responseBody = (JSONObject) jsonParser.parse(jsonResponse);
+                JSONObject responseMap = (JSONObject) responseBody.get("response");
+                JSONObject responseBodyMap = (JSONObject) responseMap.get("body");
+                JSONObject itemsMap = (JSONObject) responseBodyMap.get("items");
+                JSONArray itemList = (JSONArray) itemsMap.get("item");
+
+                List<Map<String, Object>> BusInfoList = new ArrayList<>();
+
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmm");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
+                for (Object item : itemList) {
+                    JSONObject itemMap = (JSONObject) item;
+                    Map<String, Object> BusInfo = new HashMap<>();
+                    BusInfo.put("Fare", itemMap.get("charge")); // 운임
+                    BusInfo.put("arrPlaceName", itemMap.get("arrPlaceNm")); // 도착지이름
+                    try {
+                        Date arrPlandTime = inputFormat.parse(itemMap.get("arrPlandTime").toString());
+                        String formattedArrPlandTime = outputFormat.format(arrPlandTime);
+                        BusInfo.put("arrPlandTime", formattedArrPlandTime); // 도착시간
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    BusInfo.put("depPlaceName", itemMap.get("depPlaceNm")); // 출발지 이름
+                    try {
+                        Date depPlandTime = inputFormat.parse(itemMap.get("depPlandTime").toString());
+                        String formattedDepPlandTime = outputFormat.format(depPlandTime);
+                        BusInfo.put("depPlandTime", formattedDepPlandTime); // 출발시간
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    BusInfo.put("BusGradeName", itemMap.get("gradeNm")); // 버스 등급
+                    BusInfo.put("routeId", itemMap.get("routeId")); // routeId?
+                    BusInfoList.add(BusInfo);
+                }
+                System.out.println("버스 정보 호출완료");
+                return ResponseEntity.ok(BusInfoList);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            System.out.println("에러 코드: " + response.getStatusCodeValue());
+            return ResponseEntity.status(response.getStatusCode()).build();
+        }
+    }
+
 }
