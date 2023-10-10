@@ -41,7 +41,7 @@ public class TrainBookingController {
         }
     }
 
-    @GetMapping("/findSeat")
-    public ResponseEntity<List<TrainBooking>> findSeat (@ModelAttribute Seats seat)
-    {return ResponseEntity.ok(TrainBookingRepository.findBySeat(seat));}
+//    @GetMapping("/findSeat")
+//    public ResponseEntity<List<TrainBooking>> findSeat (@ModelAttribute Seats seat)
+//    {return ResponseEntity.ok(TrainBookingRepository.findBySeat(seat));}
 }
