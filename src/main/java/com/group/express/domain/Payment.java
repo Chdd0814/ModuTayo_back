@@ -28,7 +28,6 @@ public class Payment {
     private String buyerName;
     private String buyerTel;
     private String buyerid;
-    @Column(name = "paymentDate")
     private String paymentDate;
 
     @ManyToOne (cascade = CascadeType.ALL)
