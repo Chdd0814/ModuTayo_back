@@ -18,13 +18,13 @@ public class TrainBookingService {
         return trainBookingRepository.findBookingsById(id);
     }
 
-    public void trainTicketSuccess(TrainBooking trainBooking) {
-        // 결제 정보를 데이터베이스에 저장
-        try {
-            trainBookingRepository.save(trainBooking);
-        } catch (Exception e) {
-            e.printStackTrace();
+        public void trainTicketSuccess(TrainBooking trainBooking) {
+            // 결제 정보를 데이터베이스에 저장
+            try {
+                trainBookingRepository.save(trainBooking);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
 
 }
