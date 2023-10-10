@@ -14,6 +14,9 @@ public interface MemberRepository extends JpaRepository<Member, String>{
     @Override
     Optional<Member> findById(String id);
 
+
+
+
     List<Member> findByNameContaining(String partialName);
     List<Member> findByIdContaining(String id);
 
