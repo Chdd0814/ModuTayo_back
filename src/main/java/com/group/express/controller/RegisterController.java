@@ -20,4 +20,5 @@ public class RegisterController {
          memberservice.registerUser(memberDTO);
          return ResponseEntity.ok("Register success");
     }
+
 }
