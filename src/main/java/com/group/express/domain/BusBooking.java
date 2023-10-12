@@ -19,7 +19,7 @@ public class BusBooking {
 
 
 
-    private int routeId;
+    private String routeId;
     private String busClass;
     private String departureTime;
     private String arrivalTime;
