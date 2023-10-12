@@ -43,4 +43,12 @@ public class NoticeService {
     public void deleteNotice(Long num) {
         noticeRepository.deleteById(num);
     }
+
+    public List<Notice> getMemberListByContent(String search) {
+        return noticeRepository.findByContentContaining(search);
+    }
+
+    public List<Notice> getMemberListByTitle(String search) {
+        return noticeRepository.findByTitleContaining(search);
+    }
 }
