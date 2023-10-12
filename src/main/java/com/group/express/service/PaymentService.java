@@ -15,8 +15,11 @@ public class PaymentService {
     @Autowired
     public PaymentService(PaymentRepository paymentRepository){this.paymentRepository=paymentRepository;}
 
-    public List<Payment> getPaymentList(String id ){
-        return paymentRepository.findPaymentsById(id);
+    public List<Payment> getTrainPaymentList(String id ){
+        return paymentRepository.findTrainPaymentsById(id);
+    }
+    public List<Payment> getBusPaymentList(String id ){
+        return paymentRepository.findBusPaymentsById(id);
     }
     public void PaymentSuccess(Payment payment) {
         // 결제 정보를 데이터베이스에 저장
@@ -27,4 +30,27 @@ public class PaymentService {
         }
     }
 
+    public List<Payment> getTrainPaymentListByTypeAndDay(String paymentType, String startDay, String endDay) {
+        return paymentRepository.getTrainPaymentListByTypeAndDay(paymentType,startDay,endDay);
+    }
+
+    public List<Payment> getTrainPaymentListByDay(String startDay, String endDay) {
+        return paymentRepository.getTrainPaymentListByDay(startDay,endDay);
+    }
+
+    public List<Payment> getTrainPaymentListByType(String paymentType) {
+        return paymentRepository.getTrainPaymentListByType(paymentType);
+    }
+
+    public List<Payment> getBusPaymentListByTypeAndDay(String paymentType, String startDay, String endDay) {
+        return paymentRepository.getBusPaymentListByTypeAndDay(paymentType,startDay,endDay);
+    }
+
+    public List<Payment> getBusPaymentListByDay(String startDay, String endDay) {
+        return paymentRepository.getBusPaymentListByDay(startDay,endDay);
+    }
+
+    public List<Payment> getBusPaymentListByType(String paymentType) {
+        return paymentRepository.getBusPaymentListByType(paymentType);
+    }
 }

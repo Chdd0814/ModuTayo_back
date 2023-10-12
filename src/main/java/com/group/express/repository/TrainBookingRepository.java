@@ -14,6 +14,12 @@ public interface TrainBookingRepository extends JpaRepository<TrainBooking, Stri
     @Query("SELECT t FROM TrainBooking t WHERE t.member.id = :id")
     List<TrainBooking> findBookingsById(@Param("id") String id);
 
+    @Query("SELECT b FROM TrainBooking b where b.departureStation LIKE %:start% and b.arrivalStation LIKE %:end% and STR_TO_DATE(b.reservationDate, '%Y%m%d') BETWEEN STR_TO_DATE(:startDay, '%Y-%m-%d') AND STR_TO_DATE(:endDay, '%Y-%m-%d')")
+    List<TrainBooking> getSearchTrainBookingListall(@Param("start") String start, @Param("end")String end,@Param("startDay") String startDay, @Param("endDay")String endDay);
+
+    @Query("Select b from TrainBooking b where STR_TO_DATE(b.reservationDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d')")
+    List<TrainBooking> getSearchTrainBookingListDay(@Param("startDay")String startDay, @Param("endDay")String endDay);
+
 //    @Query("SELECT tb FROM TrainBooking tb WHERE " +
 //            "tb.vehicleTypeName = :vehicleTypeName " +
 //            "AND tb.departureTime = :departureTime " +

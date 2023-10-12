@@ -11,6 +11,15 @@ import java.util.List;
 @Repository
 public interface BusBookingRepository extends JpaRepository<BusBooking, String>  {
 
+    @Query("SELECT b FROM BusBooking b where b.departureStation LIKE %:start% and b.arrivalStation LIKE %:end% and STR_TO_DATE(b.reservationDate, '%Y%m%d') BETWEEN STR_TO_DATE(:startDay, '%Y-%m-%d') AND STR_TO_DATE(:endDay, '%Y-%m-%d')")
+    List<BusBooking> getSearchBusBookingListall(@Param("start") String start, @Param("end")String end,@Param("startDay") String startDay, @Param("endDay")String endDay);
+
+
     @Query("SELECT b FROM BusBooking b WHERE b.member.id = :id")
     List<BusBooking> findBookingsById(@Param("id") String id);
+
+    @Query("Select b from BusBooking b where STR_TO_DATE(b.reservationDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d')")
+    List<BusBooking> getSearchBusBookingListDay(@Param("startDay")String startDay, @Param("endDay")String endDay);
+
+
 }
