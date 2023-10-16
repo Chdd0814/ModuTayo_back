@@ -218,8 +218,8 @@ public class apiController {
 
 
     @Async
-    @GetMapping("/getTrainInfoList")
-    public ResponseEntity<List<Map<String, Object>>>  getTrainInfoList(@RequestParam String depPlaceId, @RequestParam String arrPlaceId, @RequestParam String depPlaceTime) throws URISyntaxException {
+    @GetMapping("/getTrainroundInfoList")
+    public ResponseEntity<List<Map<String, Object>>>  getTrainroundInfoList(@RequestParam String depPlaceId, @RequestParam String arrPlaceId, @RequestParam String depPlaceTime) throws URISyntaxException {
 
         String apiUrl = publicAPIurl + "/1613000/TrainInfoService/getStrtpntAlocFndTrainInfo" +
                 "?serviceKey=" + publicAPIkey + "&pageNo=1" + "&numOfRows=100" + "&_type=json" +
@@ -245,6 +245,79 @@ public class apiController {
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss");
                 SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
+                int index = 1;
+                for (Object item : itemList) {
+                    JSONObject itemMap = (JSONObject) item;
+                    Map<String, Object> TrainInfo = new HashMap<>();
+                    TrainInfo.put("roundFare", itemMap.get("adultcharge")); // 운임
+                    TrainInfo.put("roundarrPlaceName", itemMap.get("arrplacename")); // 도착지이름
+                    try {
+                        Date arrPlandTime = inputFormat.parse(itemMap.get("arrplandtime").toString());
+                        String formattedArrPlandTime = outputFormat.format(arrPlandTime);
+                        TrainInfo.put("roundarrPlandTime", formattedArrPlandTime); // 도착시간
+                    } catch (java.text.ParseException e) {
+                        e.printStackTrace();
+                    }
+                    TrainInfo.put("rounddepPlaceName", itemMap.get("depplacename")); // 출발지 이름
+                    try {
+                        Date depPlandTime = inputFormat.parse(itemMap.get("depplandtime").toString());
+                        String formattedDepPlandTime = outputFormat.format(depPlandTime);
+                        TrainInfo.put("rounddepPlandTime", formattedDepPlandTime); // 출발시간
+                    } catch (java.text.ParseException e) {
+                        e.printStackTrace();
+//                        throw  new RuntimeException("실패");
+                    }
+                    TrainInfo.put("roundtrainGradeName", itemMap.get("traingradename")); // 기차 종류
+                    TrainInfo.put("roundtrainNum", itemMap.get("trainno")); // 기차 번호
+                    TrainInfo.put("Infoindex", index);
+                    itemListToReturn.add(TrainInfo);
+                    index++;
+                }
+                System.out.println("기차 정보 호출완료");
+                return ResponseEntity.ok(itemListToReturn);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            System.out.println("에러 코드: " + response.getStatusCodeValue());
+            return ResponseEntity.status(response.getStatusCode()).build();
+        }
+
+
+
+
+    }
+
+    @Async
+    @GetMapping("/getTrainInfoList")
+    public ResponseEntity<List<Map<String, Object>>>  getTrainInfoList(@RequestParam String depPlaceId, @RequestParam String arrPlaceId, @RequestParam String depPlaceTime) throws URISyntaxException {
+
+        String apiUrl = publicAPIurl + "/1613000/TrainInfoService/getStrtpntAlocFndTrainInfo" +
+                "?serviceKey=" + publicAPIkey + "&pageNo=1" + "&numOfRows=100" + "&_type=json" +
+                "&depPlaceId=" + depPlaceId + "&arrPlaceId=" + arrPlaceId + "&depPlandTime=" + depPlaceTime;
+        URI uri = new URI(apiUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String jsonResponse = response.getBody();
+            JSONParser jsonParser = new JSONParser();
+            try {
+                JSONObject responseBody = (JSONObject) jsonParser.parse(jsonResponse);
+                JSONObject responseMap = (JSONObject) responseBody.get("response");
+                JSONObject responseBodyMap = (JSONObject) responseMap.get("body");
+                JSONObject itemsMap = (JSONObject) responseBodyMap.get("items");
+                JSONArray itemList = (JSONArray) itemsMap.get("item");
+
+                List<Map<String, Object>> itemListToReturn = new ArrayList<>();
+
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
+                int index = 1; // 순서를 추적할 변수
                 for (Object item : itemList) {
                     JSONObject itemMap = (JSONObject) item;
                     Map<String, Object> TrainInfo = new HashMap<>();
@@ -268,7 +341,9 @@ public class apiController {
                     }
                     TrainInfo.put("trainGradeName", itemMap.get("traingradename")); // 기차 종류
                     TrainInfo.put("trainNum", itemMap.get("trainno")); // 기차 번호
+                    TrainInfo.put("Infoindex", index); // 순서를 할당
                     itemListToReturn.add(TrainInfo);
+                    index++;
                 }
                 System.out.println("기차 정보 호출완료");
                 return ResponseEntity.ok(itemListToReturn);
