@@ -33,6 +33,12 @@ public class NoticeController {
     }
 
     @GetMapping
+    public ResponseEntity<List<Notice>> getNewNotices() {
+        List<Notice> notices = noticeService.getNewNotices();
+        return ResponseEntity.ok(notices);
+    }
+
+    @GetMapping("/view")
     public ResponseEntity<List<Notice>> getAllNotices() {
         List<Notice> notices = noticeService.getAllNotices();
         return ResponseEntity.ok(notices);
