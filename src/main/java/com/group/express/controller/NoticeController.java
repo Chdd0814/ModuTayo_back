@@ -1,5 +1,6 @@
 package com.group.express.controller;
 
+import com.group.express.domain.Member;
 import com.group.express.domain.Notice;
 import com.group.express.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,13 @@ public class NoticeController {
     @GetMapping("/{num}")
     public ResponseEntity<Notice> getNotice(@PathVariable Long num) {
         Notice notice = noticeService.getNoticeById(num);
+        notice.setVisitcount(notice.getVisitcount()+1);
+
+
         if (notice == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(notice);
+        return ResponseEntity.ok( noticeService.updateNotice(notice));
     }
 
     @PostMapping()
@@ -107,4 +111,19 @@ public class NoticeController {
         noticeService.deleteNotice(num);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/SearchFilter")
+    public ResponseEntity<List<Notice>> getListMember(@RequestParam(required = false) String search, @RequestParam String classification){
+        List<Notice> noticeList = null;
+        if(search==null||search.isEmpty()){
+           noticeList=noticeService.getAllNotices();
+       }else if(classification.equals("content")) {
+            noticeList = noticeService.getMemberListByContent(search);
+        }
+        else if(classification.equals("title")) {
+            noticeList = noticeService.getMemberListByTitle(search);
+        }
+
+        return ResponseEntity.ok(noticeList);
+        }
 }
