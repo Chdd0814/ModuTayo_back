@@ -5,6 +5,7 @@ import com.group.express.domain.TrainBooking;
 import com.group.express.repository.TrainBookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,4 +34,8 @@ public class TrainBookingService {
         return trainBookingRepository.getSearchTrainBookingListDay(startDay,endDay);
     }
 
+    @Transactional
+    public void deleteTrainBooking(String ticketNumber) {
+        trainBookingRepository.deleteById(ticketNumber);
+    }
 }

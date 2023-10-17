@@ -59,6 +59,12 @@ public class TrainBookingController {
         return ResponseEntity.ok(TrainBooking);
     }
 
+    @DeleteMapping("/delete/{ticketNumber}")
+    public ResponseEntity<?> deleteBusBooking(@PathVariable String ticketNumber){
+        TrainBookingService.deleteTrainBooking(ticketNumber);
+        return ResponseEntity.ok().build();
+    }
+
 //    @GetMapping("/findSeat")
 //    public ResponseEntity<List<TrainBooking>> findSeat (@ModelAttribute Seats seat)
 //    {return ResponseEntity.ok(TrainBookingRepository.findBySeat(seat));}
