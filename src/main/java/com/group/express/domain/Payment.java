@@ -33,15 +33,15 @@ public class Payment {
     private String paymentDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false)
+    @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false,insertable = false, updatable = false)
     private TrainBooking trainBooking;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "busticketNumber", referencedColumnName = "ticketNumber", nullable = false)
+    @JoinColumn(name = "busticketNumber", referencedColumnName = "ticketNumber", nullable = false,insertable = false, updatable = false)
     private BusBooking busBooking;
 
     @ManyToOne
     @OnDelete(action= OnDeleteAction.CASCADE)
-    @JoinColumn(name = "buyerid", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "buyerid", referencedColumnName = "id", nullable = false,insertable = false, updatable = false)
     private Member member;
 }
