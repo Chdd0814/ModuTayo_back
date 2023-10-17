@@ -37,7 +37,7 @@ public class BusBooking {
 
     @ManyToOne
     @OnDelete(action= OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false,insertable = false, updatable = false)
     private Member member;
 
 }
