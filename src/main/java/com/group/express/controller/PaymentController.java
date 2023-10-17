@@ -72,9 +72,19 @@ public class PaymentController {
         return ResponseEntity.ok(PaymentList);
     }
 
-
-
+    @DeleteMapping("/delete/{ticketNumber}")
+    public ResponseEntity<?> deleteBusBooking(@PathVariable String ticketNumber){
+        PaymentService.deleteBusBooking(ticketNumber);
+        return ResponseEntity.ok().build();
     }
+
+
+
+
+
+
+
+}
 
 
 

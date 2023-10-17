@@ -53,4 +53,8 @@ public class PaymentService {
     public List<Payment> getBusPaymentListByType(String paymentType) {
         return paymentRepository.getBusPaymentListByType(paymentType);
     }
+
+    public void deleteBusBooking(String ticketNumber) {
+        paymentRepository.deleteByBusticketNumber(ticketNumber);
+    }
 }
