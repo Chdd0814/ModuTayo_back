@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -30,15 +32,16 @@ public class Payment {
     private String buyerid;
     private String paymentDate;
 
-    @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false, insertable = false, updatable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false)
     private TrainBooking trainBooking;
 
-    @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn(name = "busticketNumber", referencedColumnName = "ticketNumber", nullable = false, insertable = false, updatable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "busticketNumber", referencedColumnName = "ticketNumber", nullable = false)
     private BusBooking busBooking;
 
-    @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn(name = "buyerid", referencedColumnName = "id", nullable = false, insertable = false, updatable = false )
+    @ManyToOne
+    @OnDelete(action= OnDeleteAction.CASCADE)
+    @JoinColumn(name = "buyerid", referencedColumnName = "id", nullable = false)
     private Member member;
 }
