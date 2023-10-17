@@ -1,5 +1,6 @@
 package com.group.express.controller;
 
+import com.group.express.DTO.Password_checkDTO;
 import com.group.express.domain.Authority;
 import com.group.express.domain.Member;
 import com.group.express.service.MemberService;
@@ -51,6 +52,17 @@ public class myPageController {
         Member member=memberService.getMemberById(id);
         if(passwordEncoder.matches(password,member.getPass())){
             memberService.deleteMember(id);
+            return ResponseEntity.ok().build();
+        }else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @PutMapping("/updateMember/{id}")
+    public ResponseEntity<?> deleteMember(@PathVariable String id,@RequestBody Password_checkDTO checkPass){
+        Member member=memberService.getMemberById(id);
+        if(passwordEncoder.matches(checkPass.getOldPass(),member.getPass())&&checkPass.getNewPass().equals(checkPass.getNewPass_confirm())){
+            memberService.updatePass(member,checkPass.getNewPass());
             return ResponseEntity.ok().build();
         }else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
