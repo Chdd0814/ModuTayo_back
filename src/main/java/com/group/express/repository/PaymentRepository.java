@@ -36,4 +36,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>  {
 
     @Query("select p from Payment p where p.payMethod=:paymentType and p.busticketNumber IS NOT NULL")
     List<Payment> getBusPaymentListByType(@Param("paymentType")String paymentType);
+
+    void deleteByBusticketNumber(String ticketNumber);
 }

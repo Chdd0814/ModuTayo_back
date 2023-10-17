@@ -33,4 +33,7 @@ public class BusBookingService {
     }
 
 
+    public void deleteBusBooking(String ticketNumber) {
+        busBookingRepository.deleteById(ticketNumber);
+    }
 }
