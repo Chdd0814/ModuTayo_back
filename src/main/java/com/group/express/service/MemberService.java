@@ -48,10 +48,13 @@ public class MemberService {
     public Member getMemberById(String id){
         return memberRepository.findById(id).orElse(null);
     }
-    public Member updateMember(Member member){
-        return memberRepository.save(member);}
+    public Member updateMember(Member member){return memberRepository.save(member);}
     public void deleteMember(String id){memberRepository.deleteById(id);}
 
+    public void updatePass(Member member, String newPass) {
+        member.setPass(passwordEncoder.encode(newPass));
+        memberRepository.save(member);
+    }
 }
 
 

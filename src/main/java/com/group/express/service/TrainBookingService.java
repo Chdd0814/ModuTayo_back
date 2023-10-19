@@ -1,9 +1,11 @@
 package com.group.express.service;
 
+import com.group.express.domain.BusBooking;
 import com.group.express.domain.TrainBooking;
 import com.group.express.repository.TrainBookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,13 +20,22 @@ public class TrainBookingService {
         return trainBookingRepository.findBookingsById(id);
     }
 
-        public void trainTicketSuccess(TrainBooking trainBooking) {
+        public void trainTicketSuccess(TrainBooking trainBooking) throws Exception {
             // 결제 정보를 데이터베이스에 저장
-            try {
+
                 trainBookingRepository.save(trainBooking);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
         }
 
+    public List<TrainBooking> getSearchTrainBookingListall(String start,String end,String startDay,String endDay){
+        return trainBookingRepository.getSearchTrainBookingListall(start,end,startDay,endDay);
+    }
+    public List<TrainBooking> getSearchTrainBookingListDay(String startDay,String endDay){
+        return trainBookingRepository.getSearchTrainBookingListDay(startDay,endDay);
+    }
+
+    @Transactional
+    public void deleteTrainBooking(String ticketNumber) {
+        trainBookingRepository.deleteById(ticketNumber);
+    }
 }

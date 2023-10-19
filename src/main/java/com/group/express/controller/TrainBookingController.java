@@ -1,5 +1,6 @@
 package com.group.express.controller;
 
+import com.group.express.domain.BusBooking;
 import com.group.express.domain.Seats;
 import com.group.express.domain.TrainBooking;
 import com.group.express.repository.TrainBookingRepository;
@@ -39,6 +40,29 @@ public class TrainBookingController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("trainTIcket DB Save failed");
         }
+    }
+    @GetMapping("/SearchFilter")
+    public ResponseEntity<List<TrainBooking>> getListMember(@RequestParam String id, @RequestParam(required = false) String start, @RequestParam(required = false) String end
+            , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
+        List<TrainBooking> TrainBooking=null;
+        if(start.isEmpty()&&end.isEmpty()&&startDay.isEmpty()&&endDay.isEmpty()){
+            TrainBooking = TrainBookingService.getTrainBookingList(id);
+
+        }
+        else if(!start.isEmpty()&&!end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+            TrainBooking = TrainBookingService.getSearchTrainBookingListall(start, end, startDay, endDay);
+        }else if(start.isEmpty()&&end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()) {
+            TrainBooking = TrainBookingService.getSearchTrainBookingListDay(startDay, endDay);
+        }
+
+
+        return ResponseEntity.ok(TrainBooking);
+    }
+
+    @DeleteMapping("/delete/{ticketNumber}")
+    public ResponseEntity<?> deleteBusBooking(@PathVariable String ticketNumber){
+        TrainBookingService.deleteTrainBooking(ticketNumber);
+        return ResponseEntity.ok().build();
     }
 
 //    @GetMapping("/findSeat")

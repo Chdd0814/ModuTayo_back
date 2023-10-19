@@ -3,9 +3,11 @@ package com.group.express.service;
 import com.group.express.domain.Notice;
 import com.group.express.repository.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
@@ -42,5 +44,17 @@ public class NoticeService {
     // 공지사항 삭제
     public void deleteNotice(Long num) {
         noticeRepository.deleteById(num);
+    }
+
+    public List<Notice> getMemberListByContent(String search) {
+        return noticeRepository.findByContentContaining(search);
+    }
+
+    public List<Notice> getMemberListByTitle(String search) {
+        return noticeRepository.findByTitleContaining(search);
+    }
+
+    public List<Notice> getNewNotices() {
+    return noticeRepository.findNewNoticeList(PageRequest.of(0, 3));
     }
 }
