@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -87,6 +89,16 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(newPassword);
+    }
+
+    // 카카오 로그인
+    @PostMapping("/kakaoLogin")
+    public ResponseEntity<TokenDTO> kakaoLogin(@RequestBody TokenDTO tokenDTO) {
+        if (tokenDTO == null || !StringUtils.hasText(tokenDTO.getAccessToken())) {
+            throw new JwtException("카카오 로그인 오류");
+        }
+
+        return ResponseEntity.ok(loginService.kakaoLogin(tokenDTO.getAccessToken()));
     }
 
 
