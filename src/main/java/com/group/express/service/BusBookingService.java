@@ -6,6 +6,7 @@ import com.group.express.repository.BusBookingRepository;
 import com.group.express.repository.TrainBookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,4 +34,8 @@ public class BusBookingService {
     }
 
 
+    @Transactional
+    public void deleteBusBooking(String ticketNumber) {
+        busBookingRepository.deleteById(ticketNumber);
+    }
 }

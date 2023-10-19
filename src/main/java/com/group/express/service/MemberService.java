@@ -51,6 +51,10 @@ public class MemberService {
     public Member updateMember(Member member){return memberRepository.save(member);}
     public void deleteMember(String id){memberRepository.deleteById(id);}
 
+    public void updatePass(Member member, String newPass) {
+        member.setPass(passwordEncoder.encode(newPass));
+        memberRepository.save(member);
+    }
 }
 
 

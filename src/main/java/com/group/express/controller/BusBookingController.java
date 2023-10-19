@@ -40,7 +40,11 @@ public class BusBookingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("busTicket DB Save failed");
         }
     }
-
+    @DeleteMapping("/delete/{ticketNumber}")
+    public ResponseEntity<?> deleteBusBooking(@PathVariable String ticketNumber){
+        BusBookingService.deleteBusBooking(ticketNumber);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/SearchFilter")
     public ResponseEntity<List<BusBooking>> getListMember(@RequestParam String id,@RequestParam(required = false) String start, @RequestParam(required = false) String end
             , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
