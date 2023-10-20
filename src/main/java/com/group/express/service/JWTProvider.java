@@ -88,10 +88,17 @@ public class JWTProvider {
         long now = new Date().getTime();
         Date accessTokenExpiresIn = new Date(now + expiredTime.ACCESS_TOKEN_EXPIRE_TIME.getTime());
 
+        Member member = memberRepository.findById(email)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email));
+
         String accessToken = Jwts.builder()
-                .setSubject(email)
+                .setSubject("KaKao " + email)
                 .claim(AUTHORITIES_KEY,
                         "user") // Custom Claim 지정, Claims는 JWT의 body이고 JWT 생성자가 JWT를 받는이들이게 제시하기 바라는 정보를 포함
+                .claim("sns","Kakao")
+                .claim("name", member.getName()) // 이름
+                .claim("phonenumber", member.getPhonenumber()) // 휴대폰번호
+                .claim("mileage",member.getMileage()) // 마일리지
                 .setIssuedAt(new Date(System.currentTimeMillis()))  // 토큰 발생시간 : 현재 시간
                 .setExpiration(accessTokenExpiresIn) // 만료시간
                 .signWith(key, SignatureAlgorithm.HS512) // sign key 지정
