@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.group.express.service.TrainBookingService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -67,6 +68,19 @@ public class TrainBookingController {
     public ResponseEntity<?> deleteBusBooking(@PathVariable String ticketNumber){
         TrainBookingService.deleteTrainBooking(ticketNumber);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getusedMileage/{ticketNumber}")
+    public ResponseEntity<?> getUsedMileage(@PathVariable String ticketNumber) {
+        System.out.println(ticketNumber);
+        Optional<TrainBooking> trainBooking = Optional.ofNullable(TrainBookingService.getUsedMileage(ticketNumber));
+        if (trainBooking.isPresent()) {
+            TrainBooking trainBookingMileage = trainBooking.get();
+            int usedMileage = trainBookingMileage.getUsedMileage();
+            return ResponseEntity.ok(usedMileage);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 //    @GetMapping("/findSeat")

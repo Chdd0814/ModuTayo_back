@@ -1,6 +1,5 @@
 package com.group.express.service;
 
-import com.group.express.domain.BusBooking;
 import com.group.express.domain.TrainBooking;
 import com.group.express.repository.TrainBookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TrainBookingService {
@@ -34,6 +34,10 @@ public class TrainBookingService {
     }
     public List<TrainBooking> getSearchTrainBookingListDay(String startDay,String endDay){
         return trainBookingRepository.getSearchTrainBookingListDay(startDay,endDay);
+    }
+    public TrainBooking getUsedMileage(String ticketNumber) {
+        Optional<TrainBooking> optionalTrainBooking = trainBookingRepository.findMileageById(ticketNumber);
+        return optionalTrainBooking.orElse(null);
     }
 
     @Transactional

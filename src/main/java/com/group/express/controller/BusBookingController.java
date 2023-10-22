@@ -3,6 +3,7 @@ package com.group.express.controller;
 import ch.qos.logback.core.CoreConstants;
 import com.group.express.domain.BusBooking;
 import com.group.express.domain.Member;
+import com.group.express.domain.TrainBooking;
 import com.group.express.repository.BusBookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.group.express.service.BusBookingService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -65,6 +67,23 @@ public class BusBookingController {
 
 
         return ResponseEntity.ok(BusBookingList);
+    }
+
+    @GetMapping("/getusedMileage/{ticketNumber}")
+    public ResponseEntity<?> getUsedMileage(@PathVariable String ticketNumber) {
+        Optional<BusBooking> busBookingOptional = Optional.ofNullable(BusBookingService.getUsedMileage(ticketNumber));
+        System.out.println(busBookingOptional);
+        if (busBookingOptional.isPresent()) {
+            BusBooking busBooking = busBookingOptional.get();
+            Integer usedMileage = 132;
+            if (usedMileage != null) {
+                return ResponseEntity.ok(usedMileage);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
