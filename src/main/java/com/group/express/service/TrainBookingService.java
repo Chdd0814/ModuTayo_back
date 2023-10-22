@@ -19,7 +19,9 @@ public class TrainBookingService {
     public List<TrainBooking> getTrainBookingList(String id ){
         return trainBookingRepository.findBookingsById(id);
     }
-
+    public List<TrainBooking> getTrainBookingList( ){
+        return trainBookingRepository.findAll();
+    }
         public void trainTicketSuccess(TrainBooking trainBooking) throws Exception {
             // 결제 정보를 데이터베이스에 저장
 

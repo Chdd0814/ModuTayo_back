@@ -21,6 +21,14 @@ public class PaymentService {
     public List<Payment> getBusPaymentList(String id ){
         return paymentRepository.findBusPaymentsById(id);
     }
+    public List<Payment> getTrainPaymentList(){
+        return paymentRepository.findAll();
+    }
+    public List<Payment> getBusPaymentList(){
+        return paymentRepository.findAll();
+    }
+
+
     public void PaymentSuccess(Payment payment) {
         // 결제 정보를 데이터베이스에 저장
         try {

@@ -30,6 +30,10 @@ public class BusBookingController {
     public ResponseEntity<List<BusBooking>> getBusBooking(@PathVariable String id) {
         return ResponseEntity.ok(BusBookingService.getBusBookingList(id));}
 
+    @GetMapping("/BusBooking_admin")
+    public ResponseEntity<List<BusBooking>> getBusBookingAdmin() {
+        return ResponseEntity.ok(BusBookingService.getBusBookingList());}
+
     @PostMapping("/Success")
     public ResponseEntity<String> handlebusTicketSuccess (@RequestBody BusBooking busBooking) {
         try {
