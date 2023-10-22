@@ -19,8 +19,11 @@ public class BusBookingService {
     public List<BusBooking> getBusBookingList(String id ){
         return busBookingRepository.findBookingsById(id);
     }
+    public List<BusBooking> getBusBookingList( ){
+        return busBookingRepository.findAll();
+    }
 
-   public List<BusBooking> getSearchBusBookingListall(String start,String end,String startDay,String endDay){
+    public List<BusBooking> getSearchBusBookingListall(String start,String end,String startDay,String endDay){
         return busBookingRepository.getSearchBusBookingListall(start,end,startDay,endDay);
     }
     public List<BusBooking> getSearchBusBookingListDay(String startDay,String endDay){
