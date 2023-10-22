@@ -24,6 +24,12 @@ public class PaymentController {
     public ResponseEntity<List<Payment>> getPaymentBus(@PathVariable String id) {
         return ResponseEntity.ok(PaymentService.getBusPaymentList(id));}
 
+    @GetMapping("/PaymentBus_admin")
+    public ResponseEntity<List<Payment>> getPaymentBus() {
+        return ResponseEntity.ok(PaymentService.getBusPaymentList());}
+    @GetMapping("/PaymentTrain_admin")
+    public ResponseEntity<List<Payment>> getPaymentTrain() {
+        return ResponseEntity.ok(PaymentService.getTrainPaymentList());}
     @GetMapping("/PaymentTrain/{id}")
     public ResponseEntity<List<Payment>> getPaymentTrain(@PathVariable String id) {
         return ResponseEntity.ok(PaymentService.getTrainPaymentList(id));}

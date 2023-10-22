@@ -31,6 +31,10 @@ public class TrainBookingController {
     public ResponseEntity<List<TrainBooking>> getTrainBooking(@PathVariable String id) {
         return ResponseEntity.ok(TrainBookingService.getTrainBookingList(id));}
 
+    @GetMapping("/TrainBooking_admin")
+    public ResponseEntity<List<TrainBooking>> getTrainBooking() {
+        return ResponseEntity.ok(TrainBookingService.getTrainBookingList());}
+
     @PostMapping("/Success")
     public ResponseEntity<String> handletrainTicketSuccess (@RequestBody TrainBooking trainBooking) {
         try {
