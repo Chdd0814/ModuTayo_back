@@ -82,11 +82,14 @@ public class LoginService {
         String userId = String.valueOf(jsonObject.get("id"));
         String userName = String.valueOf(profileObject.get("nickname"));
         String email = String.valueOf(accountObject.get("email"));
+        String encodePassword = passwordEncoder.encode(email);
 
         return Member.builder()
                 .id(userId)
+                .pass(encodePassword)
                 .name(userName)
                 .email(email)
+                .mileage(0)
                 .role(Authority.user)
                 .build();
     }
