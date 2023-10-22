@@ -35,7 +35,7 @@ public class BusBookingController {
         return ResponseEntity.ok(BusBookingService.getBusBookingList());}
 
     @PostMapping("/Success")
-    public ResponseEntity<String> handletrainTicketSuccess (@RequestBody BusBooking busBooking) {
+    public ResponseEntity<String> handlebusTicketSuccess (@RequestBody BusBooking busBooking) {
         try {
             BusBookingService.busTicketSuccess(busBooking);
             return ResponseEntity.ok("busTicket DB Save success");
