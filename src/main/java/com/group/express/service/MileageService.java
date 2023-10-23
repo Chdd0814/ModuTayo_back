@@ -22,4 +22,13 @@ public class MileageService {
         return totalMileage;
     }
 
+    public int rollbackMileage (int usedMileage, int OwendMileage) {
+
+        double refundAmount = usedMileage * 0.8; // 사용한 마일리지의 80%만 환불
+
+        int newOwnedMileage = OwendMileage + (int)refundAmount; // 환불 후의 마일리지
+
+        return newOwnedMileage;
+    }
+
 }

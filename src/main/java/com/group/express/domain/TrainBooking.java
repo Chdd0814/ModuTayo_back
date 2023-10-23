@@ -36,6 +36,7 @@ public class TrainBooking {
     private String id;
     private String name;
     private String reservationDate;
+    private int usedMileage;
 
     @ManyToOne
     @OnDelete(action= OnDeleteAction.CASCADE)
