@@ -48,9 +48,7 @@ public class PaymentController {
     public ResponseEntity<List<Payment>> getListMember(@RequestParam String id, @RequestParam(required = false) String paymentType
             , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
         List<Payment> PaymentList=null;
-        if(paymentType.isEmpty()&&startDay.isEmpty()&&endDay.isEmpty()){
-            PaymentList=PaymentService.getTrainPaymentList(id);
-        }else if(!paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+        if(!paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
             PaymentList=PaymentService.getTrainPaymentListByTypeAndDay(paymentType,startDay,endDay);
         }else if(paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
             PaymentList=PaymentService.getTrainPaymentListByDay(startDay,endDay);
@@ -65,9 +63,7 @@ public class PaymentController {
     public ResponseEntity<List<Payment>> getBusPaymentListSearch(@RequestParam String id, @RequestParam(required = false) String paymentType
             , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
         List<Payment> PaymentList=null;
-        if(paymentType.isEmpty()&&startDay.isEmpty()&&endDay.isEmpty()){
-            PaymentList=PaymentService.getBusPaymentList(id);
-        }else if(!paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+        if(!paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
             PaymentList=PaymentService.getBusPaymentListByTypeAndDay(paymentType,startDay,endDay);
         }else if(paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
             PaymentList=PaymentService.getBusPaymentListByDay(startDay,endDay);
@@ -84,6 +80,35 @@ public class PaymentController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/Train_searchFilter_user")
+    public ResponseEntity<List<Payment>> getListMember_user(@RequestParam String id, @RequestParam(required = false) String paymentType
+            , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
+        List<Payment> PaymentList=null;
+        if(!paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+            PaymentList=PaymentService.getTrainPaymentListByTypeAndDay(paymentType,startDay,endDay,id);
+        }else if(paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+            PaymentList=PaymentService.getTrainPaymentListByDay(startDay,endDay,id);
+        }else if(!paymentType.isEmpty()&&startDay.isEmpty()&&endDay.isEmpty()) {
+            PaymentList=PaymentService.getTrainPaymentListByType(paymentType,id);
+        }
+
+        return ResponseEntity.ok(PaymentList);
+    }
+
+    @GetMapping("/Bus_searchFilter_user")
+    public ResponseEntity<List<Payment>> getBusPaymentListSearch_user(@RequestParam String id, @RequestParam(required = false) String paymentType
+            , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
+        List<Payment> PaymentList=null;
+        if(!paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+            PaymentList=PaymentService.getBusPaymentListByTypeAndDay(paymentType,startDay,endDay,id);
+        }else if(paymentType.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+            PaymentList=PaymentService.getBusPaymentListByDay(startDay,endDay,id);
+        }else if(!paymentType.isEmpty()&&startDay.isEmpty()&&endDay.isEmpty()) {
+            PaymentList=PaymentService.getBusPaymentListByType(paymentType,id);
+        }
+
+        return ResponseEntity.ok(PaymentList);
+    }
 
 
 

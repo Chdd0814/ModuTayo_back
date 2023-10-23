@@ -43,4 +43,22 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>  {
     List<Payment> getBusPaymentListByType(@Param("paymentType")String paymentType);
 
     void deleteByBusticketNumber(String ticketNumber);
+
+    @Query("select p from Payment p where p.buyerid=:id and p.payMethod=:paymentType and STR_TO_DATE(p.paymentDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d') and p.trainticketNumber IS NOT NULL ")
+    List<Payment> getTrainPaymentListByTypeAndDay(@Param("paymentType")String paymentType,@Param("startDay") String startDay, @Param("endDay") String endDay,@Param("id") String id);
+
+    @Query("select p from Payment p where p.buyerid=:id and STR_TO_DATE(p.paymentDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d') and p.trainticketNumber IS NOT NULL ")
+    List<Payment> getTrainPaymentListByDay(@Param("startDay")String startDay,@Param("endDay") String endDay,@Param("id") String id);
+
+    @Query("select p from Payment p where p.buyerid=:id and p.payMethod=:paymentType and p.trainticketNumber IS NOT NULL")
+    List<Payment> getTrainPaymentListByType(@Param("paymentType")String paymentType,@Param("id") String id);
+
+    @Query("select p from Payment p where p.buyerid=:id and p.payMethod=:paymentType and STR_TO_DATE(p.paymentDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d') and p.busticketNumber IS NOT NULL ")
+    List<Payment> getBusPaymentListByTypeAndDay(@Param("paymentType")String paymentType,@Param("startDay") String startDay, @Param("endDay")String endDay,@Param("id") String id);
+
+    @Query("select p from Payment p where p.buyerid=:id and STR_TO_DATE(p.paymentDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d') and p.busticketNumber IS NOT NULL ")
+    List<Payment> getBusPaymentListByDay(@Param("startDay")String startDay,@Param("endDay") String endDay,@Param("id") String id);
+
+    @Query("select p from Payment p where p.buyerid=:id and p.payMethod=:paymentType and p.busticketNumber IS NOT NULL")
+    List<Payment> getBusPaymentListByType(@Param("paymentType")String paymentType,@Param("id") String id);
 }

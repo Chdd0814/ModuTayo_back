@@ -20,13 +20,11 @@ import java.util.Optional;
 public class TrainBookingController {
 
     private final TrainBookingService TrainBookingService;
-    private final TrainBookingRepository TrainBookingRepository;
 
     @Autowired
     TrainBookingController(TrainBookingService TrainBookingService, TrainBookingRepository TrainBookingRepository){
         this.TrainBookingService=TrainBookingService;
-        this.TrainBookingRepository = TrainBookingRepository;
-    }
+     }
 
     @GetMapping("/TrainBooking/{id}")
     public ResponseEntity<List<TrainBooking>> getTrainBooking(@PathVariable String id) {
@@ -50,11 +48,7 @@ public class TrainBookingController {
     public ResponseEntity<List<TrainBooking>> getListMember(@RequestParam String id, @RequestParam(required = false) String start, @RequestParam(required = false) String end
             , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
         List<TrainBooking> TrainBooking=null;
-        if(start.isEmpty()&&end.isEmpty()&&startDay.isEmpty()&&endDay.isEmpty()){
-            TrainBooking = TrainBookingService.getTrainBookingList(id);
-
-        }
-        else if(!start.isEmpty()&&!end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+        if(!start.isEmpty()&&!end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
             TrainBooking = TrainBookingService.getSearchTrainBookingListall(start, end, startDay, endDay);
         }else if(start.isEmpty()&&end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()) {
             TrainBooking = TrainBookingService.getSearchTrainBookingListDay(startDay, endDay);
@@ -63,6 +57,21 @@ public class TrainBookingController {
 
         return ResponseEntity.ok(TrainBooking);
     }
+
+    @GetMapping("/SearchFilter_user")
+    public ResponseEntity<List<TrainBooking>> getListMember_user(@RequestParam String id, @RequestParam(required = false) String start, @RequestParam(required = false) String end
+            , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
+        List<TrainBooking> TrainBooking=null;
+        if(!start.isEmpty()&&!end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+            TrainBooking = TrainBookingService.getSearchTrainBookingListall(start, end, startDay, endDay,id);
+        }else if(start.isEmpty()&&end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()) {
+            TrainBooking = TrainBookingService.getSearchTrainBookingListDay(startDay, endDay,id);
+        }
+
+
+        return ResponseEntity.ok(TrainBooking);
+    }
+
 
     @DeleteMapping("/delete/{ticketNumber}")
     public ResponseEntity<?> deleteBusBooking(@PathVariable String ticketNumber){
