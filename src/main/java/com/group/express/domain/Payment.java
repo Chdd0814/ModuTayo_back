@@ -31,7 +31,6 @@ public class Payment {
     private String buyerTel;
     private String buyerid;
     private String paymentDate;
-    private int beforeMileage;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trainticketNumber", referencedColumnName = "ticketNumber", nullable = false,insertable = false, updatable = false)

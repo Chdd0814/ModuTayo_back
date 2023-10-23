@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BusBookingService {
@@ -19,14 +20,20 @@ public class BusBookingService {
     public List<BusBooking> getBusBookingList(String id ){
         return busBookingRepository.findBookingsById(id);
     }
+    public List<BusBooking> getBusBookingList( ){
+        return busBookingRepository.findAll();
+    }
 
-   public List<BusBooking> getSearchBusBookingListall(String start,String end,String startDay,String endDay){
+    public List<BusBooking> getSearchBusBookingListall(String start,String end,String startDay,String endDay){
         return busBookingRepository.getSearchBusBookingListall(start,end,startDay,endDay);
     }
     public List<BusBooking> getSearchBusBookingListDay(String startDay,String endDay){
         return busBookingRepository.getSearchBusBookingListDay(startDay,endDay);
     }
+    public BusBooking getUsedMileage(String ticketNumber) {
 
+       return busBookingRepository.findById(ticketNumber).orElse(null);
+    }
 
     public void busTicketSuccess(BusBooking busBooking) throws Exception {
         // 결제 정보를 데이터베이스에 저장

@@ -18,6 +18,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Long>  {
     @Query("SELECT p FROM Payment p WHERE p.buyerid = ?1 and p.busticketNumber IS NOT NULL order by p.paymentid")
     List<Payment> findBusPaymentsById(String id);
 
+    @Query("SELECT p FROM Payment p WHERE p.trainticketNumber IS NOT NULL order by p.paymentid")
+    List<Payment> findTrainPayments();
+
+    @Query("SELECT p FROM Payment p WHERE p.busticketNumber IS NOT NULL order by p.paymentid")
+    List<Payment> findBusPayments();
 
     @Query("select p from Payment p where p.payMethod=:paymentType and STR_TO_DATE(p.paymentDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d') and p.trainticketNumber IS NOT NULL ")
     List<Payment> getTrainPaymentListByTypeAndDay(@Param("paymentType")String paymentType,@Param("startDay") String startDay, @Param("endDay")String endDay);

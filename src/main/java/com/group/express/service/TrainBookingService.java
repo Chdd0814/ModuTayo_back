@@ -1,6 +1,5 @@
 package com.group.express.service;
 
-import com.group.express.domain.BusBooking;
 import com.group.express.domain.TrainBooking;
 import com.group.express.repository.TrainBookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TrainBookingService {
@@ -19,7 +19,9 @@ public class TrainBookingService {
     public List<TrainBooking> getTrainBookingList(String id ){
         return trainBookingRepository.findBookingsById(id);
     }
-
+    public List<TrainBooking> getTrainBookingList( ){
+        return trainBookingRepository.findAll();
+    }
         public void trainTicketSuccess(TrainBooking trainBooking) throws Exception {
             // 결제 정보를 데이터베이스에 저장
 
@@ -32,6 +34,10 @@ public class TrainBookingService {
     }
     public List<TrainBooking> getSearchTrainBookingListDay(String startDay,String endDay){
         return trainBookingRepository.getSearchTrainBookingListDay(startDay,endDay);
+    }
+    public TrainBooking getUsedMileage(String ticketNumber) {
+        return trainBookingRepository.findById(ticketNumber).orElse(null);
+
     }
 
     @Transactional

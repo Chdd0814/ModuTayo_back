@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.group.express.service.TrainBookingService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -30,6 +31,10 @@ public class TrainBookingController {
     @GetMapping("/TrainBooking/{id}")
     public ResponseEntity<List<TrainBooking>> getTrainBooking(@PathVariable String id) {
         return ResponseEntity.ok(TrainBookingService.getTrainBookingList(id));}
+
+    @GetMapping("/TrainBooking_admin")
+    public ResponseEntity<List<TrainBooking>> getTrainBooking() {
+        return ResponseEntity.ok(TrainBookingService.getTrainBookingList());}
 
     @PostMapping("/Success")
     public ResponseEntity<String> handletrainTicketSuccess (@RequestBody TrainBooking trainBooking) {
@@ -63,6 +68,27 @@ public class TrainBookingController {
     public ResponseEntity<?> deleteBusBooking(@PathVariable String ticketNumber){
         TrainBookingService.deleteTrainBooking(ticketNumber);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getusedMileage/{ticketNumber}")
+    public ResponseEntity<?> getUsedMileage(@PathVariable String ticketNumber) {
+        TrainBooking trainBooking = TrainBookingService.getUsedMileage(ticketNumber);
+
+        if(trainBooking != null) {
+            try {
+                int usedMileage = trainBooking.getUsedMileage();
+                if(usedMileage >= 0) {
+                    return ResponseEntity.ok(usedMileage);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("마일리지 검색작업 실패");
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 //    @GetMapping("/findSeat")
