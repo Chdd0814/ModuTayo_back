@@ -31,9 +31,8 @@ public class BusBookingService {
         return busBookingRepository.getSearchBusBookingListDay(startDay,endDay);
     }
     public BusBooking getUsedMileage(String ticketNumber) {
-        Optional<BusBooking> optionalBusBooking = busBookingRepository.findMileageById(ticketNumber);
-        System.out.println(optionalBusBooking);
-        return optionalBusBooking.orElse(null);
+
+       return busBookingRepository.findById(ticketNumber).orElse(null);
     }
 
     public void busTicketSuccess(BusBooking busBooking) throws Exception {

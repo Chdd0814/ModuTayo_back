@@ -36,8 +36,8 @@ public class TrainBookingService {
         return trainBookingRepository.getSearchTrainBookingListDay(startDay,endDay);
     }
     public TrainBooking getUsedMileage(String ticketNumber) {
-        Optional<TrainBooking> optionalTrainBooking = trainBookingRepository.findMileageById(ticketNumber);
-        return optionalTrainBooking.orElse(null);
+        return trainBookingRepository.findById(ticketNumber).orElse(null);
+
     }
 
     @Transactional

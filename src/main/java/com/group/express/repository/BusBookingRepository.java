@@ -22,6 +22,7 @@ public interface BusBookingRepository extends JpaRepository<BusBooking, String> 
 
     @Query("Select b from BusBooking b where STR_TO_DATE(b.reservationDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d')")
     List<BusBooking> getSearchBusBookingListDay(@Param("startDay")String startDay, @Param("endDay")String endDay);
-    Optional<BusBooking> findMileageById(@Param("ticketNumber") String ticketNumber);
+    @Override
+    Optional<BusBooking> findById(@Param("ticketNumber") String ticketNumber);
 
 }

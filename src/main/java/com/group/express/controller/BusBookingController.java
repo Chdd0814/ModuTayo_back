@@ -71,15 +71,19 @@ public class BusBookingController {
 
     @GetMapping("/getusedMileage/{ticketNumber}")
     public ResponseEntity<?> getUsedMileage(@PathVariable String ticketNumber) {
-        Optional<BusBooking> busBookingOptional = Optional.ofNullable(BusBookingService.getUsedMileage(ticketNumber));
-        System.out.println(busBookingOptional);
-        if (busBookingOptional.isPresent()) {
-            BusBooking busBooking = busBookingOptional.get();
-            Integer usedMileage = 132;
-            if (usedMileage != null) {
-                return ResponseEntity.ok(usedMileage);
-            } else {
-                return ResponseEntity.notFound().build();
+        BusBooking busbooking = BusBookingService.getUsedMileage(ticketNumber);
+
+        if(busbooking != null) {
+            try {
+                int usedMileage = busbooking.getUsedMileage();
+                if(usedMileage >= 0) {
+                    return ResponseEntity.ok(usedMileage);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("마일리지 검색작업 실패");
             }
         } else {
             return ResponseEntity.notFound().build();

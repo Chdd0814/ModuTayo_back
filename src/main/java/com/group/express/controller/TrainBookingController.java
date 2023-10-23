@@ -72,12 +72,20 @@ public class TrainBookingController {
 
     @GetMapping("/getusedMileage/{ticketNumber}")
     public ResponseEntity<?> getUsedMileage(@PathVariable String ticketNumber) {
-        System.out.println(ticketNumber);
-        Optional<TrainBooking> trainBooking = Optional.ofNullable(TrainBookingService.getUsedMileage(ticketNumber));
-        if (trainBooking.isPresent()) {
-            TrainBooking trainBookingMileage = trainBooking.get();
-            int usedMileage = trainBookingMileage.getUsedMileage();
-            return ResponseEntity.ok(usedMileage);
+        TrainBooking trainBooking = TrainBookingService.getUsedMileage(ticketNumber);
+
+        if(trainBooking != null) {
+            try {
+                int usedMileage = trainBooking.getUsedMileage();
+                if(usedMileage >= 0) {
+                    return ResponseEntity.ok(usedMileage);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("마일리지 검색작업 실패");
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
