@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TrainBookingRepository extends JpaRepository<TrainBooking, String> {
 
@@ -19,6 +20,10 @@ public interface TrainBookingRepository extends JpaRepository<TrainBooking, Stri
 
     @Query("Select b from TrainBooking b where STR_TO_DATE(b.reservationDate,'%Y%m%d') between STR_TO_DATE(:startDay,'%Y-%m-%d') and STR_TO_DATE(:endDay,'%Y-%m-%d')")
     List<TrainBooking> getSearchTrainBookingListDay(@Param("startDay")String startDay, @Param("endDay")String endDay);
+
+    @Override
+    Optional<TrainBooking> findById(@Param("ticketNumber") String ticketNumber);
+
 
 //    @Query("SELECT tb FROM TrainBooking tb WHERE " +
 //            "tb.vehicleTypeName = :vehicleTypeName " +

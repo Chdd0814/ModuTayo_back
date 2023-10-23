@@ -41,4 +41,27 @@ public ResponseEntity<?> updateMileage(@RequestParam String id, @RequestParam in
 
 }
 
+    @PutMapping("/rollbackMileage")
+    public ResponseEntity<?> rollbackMileage(@RequestParam String id, @RequestParam int usedMileage) {
+        Member member = memberService.getMemberById(id);
+        int OwendMileage = member.getMileage();
+
+        if (member != null) {
+            try {
+                int totalMileage = mileageService.rollbackMileage(usedMileage,OwendMileage);
+                member.setMileage((totalMileage));
+                memberService.updateMember(member);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                System.out.println("마일리지 환불 작업 실패");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Mileage rollback failed.");
+            }
+        } else {
+            System.out.println("관련 id가 없음.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 id가 존재하지 않음.");
+        }
+
+    }
+
+
 }

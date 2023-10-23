@@ -22,10 +22,10 @@ public class PaymentService {
         return paymentRepository.findBusPaymentsById(id);
     }
     public List<Payment> getTrainPaymentList(){
-        return paymentRepository.findAll();
+        return paymentRepository.findTrainPayments();
     }
     public List<Payment> getBusPaymentList(){
-        return paymentRepository.findAll();
+        return paymentRepository.findBusPayments();
     }
 
 
