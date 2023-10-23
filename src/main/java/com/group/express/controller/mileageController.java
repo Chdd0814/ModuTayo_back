@@ -20,6 +20,23 @@ public class mileageController {
         this.mileageService = mileage;
     }
 
+    @GetMapping("/getMileage")
+    public ResponseEntity<?> getMileage(@RequestParam String id) {
+        Member member = memberService.getMemberById(id);
+        if (member != null) {
+            try {
+                int Mileage = member.getMileage();
+                return ResponseEntity.ok(Mileage);
+            } catch (Exception e) {
+                System.out.println("마일리지 조회 작업 실패");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Mileage update failed.");
+            }
+        } else {
+            System.out.println("관련 id가 없음.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 id가 존재하지 않음.");
+        }
+    }
+
 @PutMapping("/UpdateMileage")
 public ResponseEntity<?> updateMileage(@RequestParam String id, @RequestParam int mileage, @RequestParam int paidAmount) {
     Member member = memberService.getMemberById(id);
