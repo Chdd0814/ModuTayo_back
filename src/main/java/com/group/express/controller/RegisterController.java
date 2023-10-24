@@ -37,4 +37,16 @@ public class RegisterController {
 
     }
 
+    @GetMapping("/vaildRegister")
+    public ResponseEntity<?> vaildRegister(@RequestParam String id) {
+        Member member = memberservice.vaildUser(id);
+
+        if (member == null) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.ok(false);
+        }
+
+    }
+
 }
