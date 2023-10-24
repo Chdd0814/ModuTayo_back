@@ -44,4 +44,12 @@ public class TrainBookingService {
     public void deleteTrainBooking(String ticketNumber) {
         trainBookingRepository.deleteById(ticketNumber);
     }
+
+    public List<TrainBooking> getSearchTrainBookingListall(String start, String end, String startDay, String endDay, String id) {
+        return trainBookingRepository.getSearchTrainBookingListall(start,end,startDay,endDay,id);
+    }
+
+    public List<TrainBooking> getSearchTrainBookingListDay(String startDay, String endDay, String id) {
+        return trainBookingRepository.getSearchTrainBookingListDay(startDay,endDay,id);
+    }
 }

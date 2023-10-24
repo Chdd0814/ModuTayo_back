@@ -65,4 +65,28 @@ public class PaymentService {
     public void deleteBusBooking(String ticketNumber) {
         paymentRepository.deleteByBusticketNumber(ticketNumber);
     }
+
+    public List<Payment> getTrainPaymentListByTypeAndDay(String paymentType, String startDay, String endDay, String id) {
+        return paymentRepository.getTrainPaymentListByTypeAndDay(paymentType,startDay,endDay,id);
+    }
+
+    public List<Payment> getTrainPaymentListByDay(String startDay, String endDay, String id) {
+        return paymentRepository.getTrainPaymentListByDay(startDay,endDay,id);
+    }
+
+    public List<Payment> getTrainPaymentListByType(String paymentType, String id) {
+        return paymentRepository.getTrainPaymentListByType(paymentType,id);
+    }
+    public List<Payment> getBusPaymentListByTypeAndDay(String paymentType, String startDay, String endDay, String id) {
+        return paymentRepository.getBusPaymentListByTypeAndDay(paymentType,startDay,endDay,id);
+    }
+
+    public List<Payment> getBusPaymentListByDay(String startDay, String endDay, String id) {
+        return paymentRepository.getBusPaymentListByDay(startDay,endDay,id);
+    }
+
+    public List<Payment> getBusPaymentListByType(String paymentType, String id) {
+        return paymentRepository.getBusPaymentListByType(paymentType,id);
+    }
+
 }
