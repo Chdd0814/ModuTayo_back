@@ -92,7 +92,7 @@ public class JWTProvider {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email));
 
         String accessToken = Jwts.builder()
-                .setSubject("KaKao " + email)
+                .setSubject(email)
                 .claim(AUTHORITIES_KEY,
                         "user") // Custom Claim 지정, Claims는 JWT의 body이고 JWT 생성자가 JWT를 받는이들이게 제시하기 바라는 정보를 포함
                 .claim("sns","Kakao")
