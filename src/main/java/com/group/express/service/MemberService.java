@@ -58,10 +58,6 @@ public class MemberService {
         member.setPass(passwordEncoder.encode(newPass));
         memberRepository.save(member);
     }
-
-    public  Member vaildUser(String id) {
-        return memberRepository.findById(id).orElse(null);
-    }
 }
 
 
