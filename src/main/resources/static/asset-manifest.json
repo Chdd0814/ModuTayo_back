@@ -14,10 +14,11 @@
     "index.html": "/index.html",
     "main.853a9be5.css.map": "/static/css/main.853a9be5.css.map",
     "main.8c8d2eb1.js.map": "/static/js/main.8c8d2eb1.js.map",
+
     "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.853a9be5.css",
     "static/js/main.8c8d2eb1.js"
-  ]
+ ]
 }

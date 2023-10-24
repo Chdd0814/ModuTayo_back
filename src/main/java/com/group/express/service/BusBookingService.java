@@ -20,6 +20,7 @@ public class BusBookingService {
     public List<BusBooking> getBusBookingList(String id ){
         return busBookingRepository.findBookingsById(id);
     }
+
     public List<BusBooking> getBusBookingList( ){
         return busBookingRepository.findAll();
     }
@@ -29,6 +30,12 @@ public class BusBookingService {
     }
     public List<BusBooking> getSearchBusBookingListDay(String startDay,String endDay){
         return busBookingRepository.getSearchBusBookingListDay(startDay,endDay);
+    }
+    public List<BusBooking> getSearchBusBookingListall(String start,String end,String startDay,String endDay,String id){
+        return busBookingRepository.getSearchBusBookingListall(start,end,startDay,endDay,id);
+    }
+    public List<BusBooking> getSearchBusBookingListDay(String startDay,String endDay,String id){
+        return busBookingRepository.getSearchBusBookingListDay(startDay,endDay,id);
     }
     public BusBooking getUsedMileage(String ticketNumber) {
 

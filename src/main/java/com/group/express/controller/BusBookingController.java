@@ -55,14 +55,24 @@ public class BusBookingController {
     public ResponseEntity<List<BusBooking>> getListMember(@RequestParam String id,@RequestParam(required = false) String start, @RequestParam(required = false) String end
             , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
         List<BusBooking> BusBookingList=null;
-        if(start.isEmpty()&&end.isEmpty()&&startDay.isEmpty()&&endDay.isEmpty()){
-             BusBookingList = BusBookingService.getBusBookingList(id);
-
-        }
-        else if(!start.isEmpty()&&!end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+        if(!start.isEmpty()&&!end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
              BusBookingList = BusBookingService.getSearchBusBookingListall(start, end, startDay, endDay);
         }else if(start.isEmpty()&&end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()) {
             BusBookingList = BusBookingService.getSearchBusBookingListDay(startDay, endDay);
+        }
+
+
+        return ResponseEntity.ok(BusBookingList);
+    }
+
+    @GetMapping("/SearchFilter_user")
+    public ResponseEntity<List<BusBooking>> getListMember_user(@RequestParam String id,@RequestParam(required = false) String start, @RequestParam(required = false) String end
+            , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
+        List<BusBooking> BusBookingList=null;
+        if(!start.isEmpty()&&!end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()){
+            BusBookingList = BusBookingService.getSearchBusBookingListall(start, end, startDay, endDay,id);
+        }else if(start.isEmpty()&&end.isEmpty()&&!startDay.isEmpty()&&!endDay.isEmpty()) {
+            BusBookingList = BusBookingService.getSearchBusBookingListDay(startDay, endDay,id);
         }
 
 
