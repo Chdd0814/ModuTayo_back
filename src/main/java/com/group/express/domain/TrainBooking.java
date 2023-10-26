@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "trainbooking")
+@Table(name = "TrainBooking")
 public class TrainBooking {
 
     private String vehicleTypeName;

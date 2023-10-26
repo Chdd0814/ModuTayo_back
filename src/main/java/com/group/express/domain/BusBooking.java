@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "busbooking")
+@Table(name = "BusBooking")
 public class BusBooking {
 
 
