@@ -35,8 +35,11 @@ public class TrainBookingController {
         return ResponseEntity.ok(TrainBookingService.getTrainBookingList());}
 
     @PostMapping("/Success")
-    public ResponseEntity<String> handletrainTicketSuccess (@RequestBody TrainBooking trainBooking) {
+    public ResponseEntity<?> handletrainTicketSuccess (@RequestBody TrainBooking trainBooking) {
         try {
+            int party = trainBooking.getParty();
+
+            System.out.println(party);
             TrainBookingService.trainTicketSuccess(trainBooking);
             return ResponseEntity.ok("trainTicket DB Save success");
         } catch (Exception e) {
@@ -44,6 +47,9 @@ public class TrainBookingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("trainTIcket DB Save failed");
         }
     }
+
+
+
     @GetMapping("/SearchFilter")
     public ResponseEntity<List<TrainBooking>> getListMember(@RequestParam String id, @RequestParam(required = false) String start, @RequestParam(required = false) String end
             , @RequestParam(required = false) String startDay, @RequestParam(required = false) String endDay){
