@@ -1,5 +1,6 @@
 package com.group.express.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,6 +36,10 @@ public class BusBooking {
     private String name;
     private String reservationDate;
     private int usedMileage;
+    @JsonProperty("Party")
+    @Column(name = "Party")
+    private int Party;
+
 
     @ManyToOne
     @OnDelete(action= OnDeleteAction.CASCADE)

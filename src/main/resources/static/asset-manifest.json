@@ -1,11 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.853a9be5.css",
-<<<<<<< HEAD
-    "main.js": "/static/js/main.267bece3.js",
-=======
-    "main.js": "/static/js/main.c0704515.js",
->>>>>>> 77587e11fa8ef18f7b041c03283ba44e22e782bb
+    "main.css": "/static/css/main.a3efca6d.css",
+    "main.js": "/static/js/main.beb7d2f0.js",
     "static/js/787.cda612ba.chunk.js": "/static/js/787.cda612ba.chunk.js",
     "static/media/경부선.png": "/static/media/경부선.23b08945558297dc66c7.png",
     "static/media/전라선.png": "/static/media/전라선.cfedeb1af4d3ab344d06.png",
@@ -16,20 +12,12 @@
     "static/media/중부내륙선.png": "/static/media/중부내륙선.aef1930a15200f7d1a78.png",
     "static/media/kakao_login.png": "/static/media/kakao_login.2e671005f3454999d408.png",
     "index.html": "/index.html",
-    "main.853a9be5.css.map": "/static/css/main.853a9be5.css.map",
-<<<<<<< HEAD
-    "main.267bece3.js.map": "/static/js/main.267bece3.js.map",
-=======
-    "main.c0704515.js.map": "/static/js/main.c0704515.js.map",
->>>>>>> 77587e11fa8ef18f7b041c03283ba44e22e782bb
+    "main.a3efca6d.css.map": "/static/css/main.a3efca6d.css.map",
+    "main.beb7d2f0.js.map": "/static/js/main.beb7d2f0.js.map",
     "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.853a9be5.css",
-<<<<<<< HEAD
-    "static/js/main.267bece3.js"
-=======
-    "static/js/main.c0704515.js"
->>>>>>> 77587e11fa8ef18f7b041c03283ba44e22e782bb
+    "static/css/main.a3efca6d.css",
+    "static/js/main.beb7d2f0.js"
   ]
 }

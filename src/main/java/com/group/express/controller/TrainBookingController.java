@@ -35,11 +35,8 @@ public class TrainBookingController {
         return ResponseEntity.ok(TrainBookingService.getTrainBookingList());}
 
     @PostMapping("/Success")
-    public ResponseEntity<?> handletrainTicketSuccess (@RequestBody TrainBooking trainBooking) {
+    public ResponseEntity<String> handletrainTicketSuccess (@RequestBody TrainBooking trainBooking) {
         try {
-            int party = trainBooking.getParty();
-
-            System.out.println(party);
             TrainBookingService.trainTicketSuccess(trainBooking);
             return ResponseEntity.ok("trainTicket DB Save success");
         } catch (Exception e) {
