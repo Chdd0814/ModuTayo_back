@@ -15,7 +15,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "payment")
+@Table(name = "Payment")
 public class Payment {
 
     @Id
